@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
+import ReactYoutube from "../components/ReactYoutube";
 class Home extends Component {
   state = {
     selectedFile: null,
@@ -56,6 +57,10 @@ class Home extends Component {
             </button>
             {loader}
             <p>Predict : {this.state.predicted_output}</p>
+
+            <div>
+              <ReactYoutube videoId="Y70hiPNxe4Q"/>
+            </div>
           </div>
         </div>
       </div>

@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import "./App.css";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Home from "./containers/Home";
-import Politician from './containers/Politician'
+import Politician from './containers/Politician/Politician'
 import Navbar from "./components/Navbar";
+import Demo from './containers/Demo'
 class App extends Component {
   render() {
     return (
@@ -11,10 +12,13 @@ class App extends Component {
         <Navbar />
         <Switch>
           <Route exact path="/">
-            <Home />
+            <Demo />
           </Route>
           <Route path="/politician">
             <Politician />
+          </Route>
+          <Route path="/demo">
+            <Home />
           </Route>
         </Switch>
       </Router>
