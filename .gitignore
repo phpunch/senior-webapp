@@ -21,3 +21,5 @@ frontend/yarn-debug.log*
 frontend/yarn-error.log*
 
 backend/*.wav
+backend/audios
+backend/__pycache__
