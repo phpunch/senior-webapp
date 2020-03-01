@@ -1,0 +1,29 @@
+# ivector-plda-scoring --normalize-length=true "ivector-copy-plda --smoothing=0.0 exp/pvector_net/pvector_adapt/plda_adapt - |" "ark:ivector-subtract-global-mean exp/pvector_net/pvector_adapt/mean.vec scp:exp/pvector_net/pvector_dev/spk_xvector.scp ark:- | transform-vec exp/pvector_net/pvector_train_combined/transform.mat ark:- ark:- | ivector-normalize-length ark:- ark:- |" "ark:ivector-subtract-global-mean exp/pvector_net/pvector_adapt/mean.vec scp:exp/pvector_net/pvector_prod/xvector.scp ark:- | transform-vec exp/pvector_net/pvector_train_combined/transform.mat ark:- ark:- | ivector-normalize-length ark:- ark:- |" "cat 'exp/trial_prod' | cut -d\  --fields=1,2 |" exp/scores_prod-clean 
+# Started at Sun Mar  1 18:50:38 +07 2020
+#
+ivector-plda-scoring --normalize-length=true 'ivector-copy-plda --smoothing=0.0 exp/pvector_net/pvector_adapt/plda_adapt - |' 'ark:ivector-subtract-global-mean exp/pvector_net/pvector_adapt/mean.vec scp:exp/pvector_net/pvector_dev/spk_xvector.scp ark:- | transform-vec exp/pvector_net/pvector_train_combined/transform.mat ark:- ark:- | ivector-normalize-length ark:- ark:- |' 'ark:ivector-subtract-global-mean exp/pvector_net/pvector_adapt/mean.vec scp:exp/pvector_net/pvector_prod/xvector.scp ark:- | transform-vec exp/pvector_net/pvector_train_combined/transform.mat ark:- ark:- | ivector-normalize-length ark:- ark:- |' 'cat '\''exp/trial_prod'\'' | cut -d\  --fields=1,2 |' exp/scores_prod-clean 
+ivector-copy-plda --smoothing=0.0 exp/pvector_net/pvector_adapt/plda_adapt - 
+ERROR (ivector-copy-plda[5.5.490~1-b2f64]:Input():kaldi-io.cc:756) Error opening input stream exp/pvector_net/pvector_adapt/plda_adapt
+
+[ Stack-Trace: ]
+ivector-copy-plda(kaldi::MessageLogger::LogMessage() const+0xb42) [0x559cccad5088]
+ivector-copy-plda(kaldi::MessageLogger::LogAndThrow::operator=(kaldi::MessageLogger const&)+0x21) [0x559ccca6198b]
+ivector-copy-plda(kaldi::Input::Input(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, bool*)+0xbe) [0x559ccca60f58]
+ivector-copy-plda(main+0x246) [0x559ccca5a390]
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xe7) [0x7f5737232b97]
+ivector-copy-plda(_start+0x2a) [0x559ccca5a06a]
+
+kaldi::KaldiFatalErrorERROR (ivector-plda-scoring[5.5.490~1-b2f64]:ExpectToken():io-funcs.cc:200) Failed to read token [started at file position -1], expected <Plda>
+
+[ Stack-Trace: ]
+ivector-plda-scoring(kaldi::MessageLogger::LogMessage() const+0xb42) [0x561fcc664fec]
+ivector-plda-scoring(kaldi::MessageLogger::LogAndThrow::operator=(kaldi::MessageLogger const&)+0x21) [0x561fcc5de671]
+ivector-plda-scoring(kaldi::ExpectToken(std::istream&, bool, char const*)+0x17f) [0x561fcc666a60]
+ivector-plda-scoring(kaldi::Plda::Read(std::istream&, bool)+0x1e) [0x561fcc5eb3b4]
+ivector-plda-scoring(main+0x25e) [0x561fcc5dc4e8]
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xe7) [0x7f1da49afb97]
+ivector-plda-scoring(_start+0x2a) [0x561fcc5dc1aa]
+
+WARNING (ivector-plda-scoring[5.5.490~1-b2f64]:Close():kaldi-io.cc:515) Pipe ivector-copy-plda --smoothing=0.0 exp/pvector_net/pvector_adapt/plda_adapt - | had nonzero return status 65280
+kaldi::KaldiFatalError# Accounting: time=0 threads=1
+# Ended (code 255) at Sun Mar  1 18:50:38 +07 2020, elapsed time 0 seconds

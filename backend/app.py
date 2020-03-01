@@ -10,6 +10,8 @@ import os
 import subprocess
 import os
 
+import predict
+
 
 
 class HandleCORS(object):
@@ -32,7 +34,7 @@ class LoadJsonBodyMiddleware(object):
 class AudioStorage(object):
     __audio_filename = ""
 
-    def on_post(self, req, resp):
+    def on_post_upload(self, req, resp):
 
         # Get audio file
         input_file = req.get_param('file')
@@ -90,7 +92,28 @@ class AudioStorage(object):
         resp.status = falcon.HTTP_200
         resp.body = json.dumps(output)
 
+    def on_post_youtube(self, req, resp, data=None):
+      print(data)
+      try:
+        predict.clear_dir()
+        predict.check_exists()
+        predict.download_youtube(data["youtube_url"])
+        predict.audio_segmentation()
+        predict.write_wav_file()
+        prediction = predict.test()
+      except:
+        raise
+      output = {
+          'method': 'post',
+          'prediction': prediction
+      }
+
+      resp.status = falcon.HTTP_200
+      resp.body = json.dumps(output)
+
+
 app_api = falcon.API(middleware=[HandleCORS(), LoadJsonBodyMiddleware(), MultipartMiddleware()])
-app_api.add_route('/upload', AudioStorage())
+app_api.add_route('/upload', AudioStorage(), suffix="upload")
+app_api.add_route('/youtube', AudioStorage(), suffix="youtube")
 
 # serve(app, host="127.0.0.1", port=8000)

@@ -5,6 +5,7 @@ import Home from "./containers/Home";
 import Politician from './containers/Politician/Politician'
 import Navbar from "./components/Navbar";
 import DemoController from './containers/Demo/DemoController'
+import DemoYoutube from './containers/DemoYoutube/DemoYoutube'
 class App extends Component {
   render() {
     return (
@@ -12,6 +13,9 @@ class App extends Component {
         <Navbar />
         <Switch>
           <Route exact path="/">
+            <DemoYoutube />
+          </Route>
+          <Route exact path="/demo">
             <DemoController />
           </Route>
           <Route path="/politician">

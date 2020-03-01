@@ -1,0 +1,310 @@
+# local/tf/extract_embedding.py --use-gpu=no --min-chunk-size=25 --chunk-size=400 "--feature-rspecifier=apply-cmvn-sliding --norm-vars=false --center=true --cmn-window=300 scp:data/feats.scp ark:- | select-voiced-frames ark:- scp:data/vad.scp ark:- |" "--vector-wspecifier=| copy-vector ark:- ark,scp:exp/pvector_net/pvector_prod//xvector.ark,exp/pvector_net/pvector_prod//xvector.scp" --model-dir=exp/pvector_net/models --model-file=0_vector_best.h5 
+# Started at Sun Mar  1 22:21:41 +07 2020
+#
+2020-03-01 22:21:42,098 [local/tf/extract_embedding.py:38 - <module> - INFO ] Start running on host: phpunch
+2020-03-01 22:21:42,098 [local/tf/extract_embedding.py:39 - <module> - INFO ] Extract embeddings from features (extract_embedding.py)
+2020-03-01 22:21:42.106838: I tensorflow/core/platform/cpu_feature_guard.cc:142] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2020-03-01 22:21:42.129663: I tensorflow/core/platform/profile_utils/cpu_utils.cc:94] CPU Frequency: 3199980000 Hz
+2020-03-01 22:21:42.130189: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x55f35defb440 executing computations on platform Host. Devices:
+2020-03-01 22:21:42.130334: I tensorflow/compiler/xla/service/service.cc:175]   StreamExecutor device (0): <undefined>, <undefined>
+2020-03-01 22:21:42.131355: I tensorflow/stream_executor/platform/default/dso_loader.cc:42] Successfully opened dynamic library libcuda.so.1
+2020-03-01 22:21:42.154565: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:1005] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2020-03-01 22:21:42.154900: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1640] Found device 0 with properties: 
+name: GeForce RTX 2060 major: 7 minor: 5 memoryClockRate(GHz): 1.695
+pciBusID: 0000:01:00.0
+2020-03-01 22:21:42.155074: I tensorflow/stream_executor/platform/default/dso_loader.cc:42] Successfully opened dynamic library libcudart.so.10.0
+2020-03-01 22:21:42.155896: I tensorflow/stream_executor/platform/default/dso_loader.cc:42] Successfully opened dynamic library libcublas.so.10.0
+2020-03-01 22:21:42.156633: I tensorflow/stream_executor/platform/default/dso_loader.cc:42] Successfully opened dynamic library libcufft.so.10.0
+2020-03-01 22:21:42.156848: I tensorflow/stream_executor/platform/default/dso_loader.cc:42] Successfully opened dynamic library libcurand.so.10.0
+2020-03-01 22:21:42.157827: I tensorflow/stream_executor/platform/default/dso_loader.cc:42] Successfully opened dynamic library libcusolver.so.10.0
+2020-03-01 22:21:42.158566: I tensorflow/stream_executor/platform/default/dso_loader.cc:42] Successfully opened dynamic library libcusparse.so.10.0
+2020-03-01 22:21:42.161533: I tensorflow/stream_executor/platform/default/dso_loader.cc:42] Successfully opened dynamic library libcudnn.so.7
+2020-03-01 22:21:42.161690: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:1005] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2020-03-01 22:21:42.162034: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:1005] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2020-03-01 22:21:42.162402: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1763] Adding visible gpu devices: 0
+2020-03-01 22:21:42.162489: I tensorflow/stream_executor/platform/default/dso_loader.cc:42] Successfully opened dynamic library libcudart.so.10.0
+2020-03-01 22:21:42.233173: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1181] Device interconnect StreamExecutor with strength 1 edge matrix:
+2020-03-01 22:21:42.233246: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1187]      0 
+2020-03-01 22:21:42.233300: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1200] 0:   N 
+2020-03-01 22:21:42.233501: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:1005] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2020-03-01 22:21:42.234084: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:1005] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2020-03-01 22:21:42.234418: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:1005] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2020-03-01 22:21:42.234651: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1326] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 4434 MB memory) -> physical GPU (device: 0, name: GeForce RTX 2060, pci bus id: 0000:01:00.0, compute capability: 7.5)
+2020-03-01 22:21:42.235685: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x55f360c4b670 executing computations on platform CUDA. Devices:
+2020-03-01 22:21:42.235751: I tensorflow/compiler/xla/service/service.cc:175]   StreamExecutor device (0): GeForce RTX 2060, Compute Capability 7.5
+apply-cmvn-sliding --norm-vars=false --center=true --cmn-window=300 scp:data/feats.scp ark:- 
+select-voiced-frames ark:- scp:data/vad.scp ark:- 
+WARNING:tensorflow:From /home/punch/anaconda3/lib/python3.7/site-packages/tensorflow/python/keras/initializers.py:94: calling TruncatedNormal.__init__ (from tensorflow.python.ops.init_ops) with dtype is deprecated and will be removed in a future version.
+Instructions for updating:
+Call initializer instance with the dtype argument instead of passing it to the constructor
+WARNING:tensorflow:From /home/punch/anaconda3/lib/python3.7/site-packages/tensorflow/python/ops/init_ops.py:97: calling Zeros.__init__ (from tensorflow.python.ops.init_ops) with dtype is deprecated and will be removed in a future version.
+Instructions for updating:
+Call initializer instance with the dtype argument instead of passing it to the constructor
+WARNING:tensorflow:From /home/punch/anaconda3/lib/python3.7/site-packages/tensorflow/python/ops/init_ops.py:97: calling Ones.__init__ (from tensorflow.python.ops.init_ops) with dtype is deprecated and will be removed in a future version.
+Instructions for updating:
+Call initializer instance with the dtype argument instead of passing it to the constructor
+copy-vector ark:- ark,scp:exp/pvector_net/pvector_prod//xvector.ark.tmp.ark,exp/pvector_net/pvector_prod//xvector.scp.tmp.scp 
+WARNING:tensorflow:No training configuration found in save file: the model was *not* compiled. Compile it manually.
+2020-03-01 22:21:43,026 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000000' which have shape '(298, 23)'
+2020-03-01 22:21:43.055487: I tensorflow/stream_executor/platform/default/dso_loader.cc:42] Successfully opened dynamic library libcublas.so.10.0
+2020-03-01 22:21:43.195282: I tensorflow/stream_executor/platform/default/dso_loader.cc:42] Successfully opened dynamic library libcudnn.so.7
+2020-03-01 22:21:44,018 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000001' which have shape '(300, 23)'
+2020-03-01 22:21:44,036 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000002' which have shape '(300, 23)'
+2020-03-01 22:21:44,038 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000003' which have shape '(300, 23)'
+2020-03-01 22:21:44,041 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000004' which have shape '(300, 23)'
+2020-03-01 22:21:44,043 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000005' which have shape '(300, 23)'
+2020-03-01 22:21:44,046 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000006' which have shape '(300, 23)'
+2020-03-01 22:21:44,049 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000007' which have shape '(300, 23)'
+2020-03-01 22:21:44,051 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000008' which have shape '(300, 23)'
+2020-03-01 22:21:44,053 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000009' which have shape '(300, 23)'
+2020-03-01 22:21:44,056 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000010' which have shape '(300, 23)'
+2020-03-01 22:21:44,058 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000011' which have shape '(300, 23)'
+2020-03-01 22:21:44,061 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000012' which have shape '(300, 23)'
+2020-03-01 22:21:44,063 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000013' which have shape '(300, 23)'
+2020-03-01 22:21:44,065 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000014' which have shape '(300, 23)'
+2020-03-01 22:21:44,068 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000015' which have shape '(300, 23)'
+2020-03-01 22:21:44,071 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000016' which have shape '(300, 23)'
+2020-03-01 22:21:44,073 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000018' which have shape '(300, 23)'
+2020-03-01 22:21:44,075 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000019' which have shape '(300, 23)'
+2020-03-01 22:21:44,077 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000020' which have shape '(300, 23)'
+2020-03-01 22:21:44,080 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000021' which have shape '(300, 23)'
+2020-03-01 22:21:44,082 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000022' which have shape '(300, 23)'
+2020-03-01 22:21:44,085 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000023' which have shape '(300, 23)'
+2020-03-01 22:21:44,088 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000024' which have shape '(300, 23)'
+2020-03-01 22:21:44,090 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000025' which have shape '(300, 23)'
+2020-03-01 22:21:44,092 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000026' which have shape '(300, 23)'
+2020-03-01 22:21:44,094 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000027' which have shape '(300, 23)'
+2020-03-01 22:21:44,097 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000028' which have shape '(300, 23)'
+2020-03-01 22:21:44,099 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000029' which have shape '(300, 23)'
+2020-03-01 22:21:44,101 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000030' which have shape '(300, 23)'
+2020-03-01 22:21:44,104 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000031' which have shape '(300, 23)'
+2020-03-01 22:21:44,106 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000032' which have shape '(300, 23)'
+2020-03-01 22:21:44,108 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000033' which have shape '(300, 23)'
+2020-03-01 22:21:44,110 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000034' which have shape '(300, 23)'
+2020-03-01 22:21:44,112 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000036' which have shape '(300, 23)'
+2020-03-01 22:21:44,115 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000037' which have shape '(300, 23)'
+2020-03-01 22:21:44,117 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000038' which have shape '(300, 23)'
+2020-03-01 22:21:44,119 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000039' which have shape '(300, 23)'
+2020-03-01 22:21:44,121 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000040' which have shape '(300, 23)'
+2020-03-01 22:21:44,124 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000041' which have shape '(300, 23)'
+2020-03-01 22:21:44,126 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000042' which have shape '(300, 23)'
+2020-03-01 22:21:44,128 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000043' which have shape '(300, 23)'
+2020-03-01 22:21:44,131 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000044' which have shape '(300, 23)'
+2020-03-01 22:21:44,133 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000045' which have shape '(300, 23)'
+2020-03-01 22:21:44,135 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000046' which have shape '(300, 23)'
+2020-03-01 22:21:44,138 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000047' which have shape '(300, 23)'
+2020-03-01 22:21:44,140 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000048' which have shape '(300, 23)'
+2020-03-01 22:21:44,142 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000049' which have shape '(300, 23)'
+2020-03-01 22:21:44,144 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000050' which have shape '(300, 23)'
+2020-03-01 22:21:44,147 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000051' which have shape '(300, 23)'
+2020-03-01 22:21:44,149 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000052' which have shape '(300, 23)'
+2020-03-01 22:21:44,151 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000054' which have shape '(300, 23)'
+2020-03-01 22:21:44,153 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000055' which have shape '(300, 23)'
+2020-03-01 22:21:44,155 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000056' which have shape '(300, 23)'
+2020-03-01 22:21:44,157 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000057' which have shape '(300, 23)'
+2020-03-01 22:21:44,159 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000058' which have shape '(300, 23)'
+2020-03-01 22:21:44,162 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000059' which have shape '(300, 23)'
+2020-03-01 22:21:44,165 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000060' which have shape '(300, 23)'
+2020-03-01 22:21:44,167 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000061' which have shape '(300, 23)'
+2020-03-01 22:21:44,169 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000062' which have shape '(300, 23)'
+2020-03-01 22:21:44,171 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000063' which have shape '(300, 23)'
+2020-03-01 22:21:44,173 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000064' which have shape '(300, 23)'
+2020-03-01 22:21:44,176 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000065' which have shape '(300, 23)'
+2020-03-01 22:21:44,178 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000066' which have shape '(300, 23)'
+2020-03-01 22:21:44,181 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000067' which have shape '(300, 23)'
+2020-03-01 22:21:44,183 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000068' which have shape '(300, 23)'
+2020-03-01 22:21:44,185 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000069' which have shape '(300, 23)'
+2020-03-01 22:21:44,187 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000070' which have shape '(300, 23)'
+2020-03-01 22:21:44,189 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000017' which have shape '(300, 23)'
+2020-03-01 22:21:44,191 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000035' which have shape '(300, 23)'
+2020-03-01 22:21:44,194 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000053' which have shape '(300, 23)'
+2020-03-01 22:21:44,196 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000071' which have shape '(300, 23)'
+2020-03-01 22:21:44,199 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000089' which have shape '(300, 23)'
+2020-03-01 22:21:44,201 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000107' which have shape '(300, 23)'
+2020-03-01 22:21:44,203 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000072' which have shape '(300, 23)'
+2020-03-01 22:21:44,205 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000073' which have shape '(300, 23)'
+2020-03-01 22:21:44,208 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000074' which have shape '(300, 23)'
+2020-03-01 22:21:44,210 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000075' which have shape '(300, 23)'
+2020-03-01 22:21:44,212 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000076' which have shape '(300, 23)'
+2020-03-01 22:21:44,214 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000077' which have shape '(300, 23)'
+2020-03-01 22:21:44,217 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000078' which have shape '(300, 23)'
+2020-03-01 22:21:44,219 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000079' which have shape '(300, 23)'
+2020-03-01 22:21:44,222 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000080' which have shape '(300, 23)'
+2020-03-01 22:21:44,224 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000081' which have shape '(300, 23)'
+2020-03-01 22:21:44,226 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000082' which have shape '(300, 23)'
+2020-03-01 22:21:44,228 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000083' which have shape '(300, 23)'
+2020-03-01 22:21:44,231 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000084' which have shape '(300, 23)'
+2020-03-01 22:21:44,234 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000085' which have shape '(300, 23)'
+2020-03-01 22:21:44,236 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000086' which have shape '(300, 23)'
+2020-03-01 22:21:44,238 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000087' which have shape '(300, 23)'
+2020-03-01 22:21:44,241 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000088' which have shape '(300, 23)'
+2020-03-01 22:21:44,243 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000090' which have shape '(300, 23)'
+2020-03-01 22:21:44,245 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000091' which have shape '(300, 23)'
+2020-03-01 22:21:44,248 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000092' which have shape '(300, 23)'
+2020-03-01 22:21:44,250 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000093' which have shape '(300, 23)'
+2020-03-01 22:21:44,252 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000094' which have shape '(300, 23)'
+2020-03-01 22:21:44,254 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000095' which have shape '(300, 23)'
+2020-03-01 22:21:44,256 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000096' which have shape '(300, 23)'
+2020-03-01 22:21:44,258 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000097' which have shape '(300, 23)'
+2020-03-01 22:21:44,261 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000098' which have shape '(300, 23)'
+2020-03-01 22:21:44,263 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000099' which have shape '(300, 23)'
+2020-03-01 22:21:44,265 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000100' which have shape '(300, 23)'
+2020-03-01 22:21:44,268 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000101' which have shape '(300, 23)'
+2020-03-01 22:21:44,270 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000102' which have shape '(300, 23)'
+2020-03-01 22:21:44,272 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000103' which have shape '(300, 23)'
+2020-03-01 22:21:44,274 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000104' which have shape '(300, 23)'
+2020-03-01 22:21:44,277 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000105' which have shape '(300, 23)'
+2020-03-01 22:21:44,279 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000106' which have shape '(300, 23)'
+2020-03-01 22:21:44,282 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000108' which have shape '(300, 23)'
+2020-03-01 22:21:44,284 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000109' which have shape '(300, 23)'
+2020-03-01 22:21:44,286 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000110' which have shape '(300, 23)'
+2020-03-01 22:21:44,288 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000111' which have shape '(300, 23)'
+2020-03-01 22:21:44,290 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000112' which have shape '(300, 23)'
+2020-03-01 22:21:44,293 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000113' which have shape '(300, 23)'
+2020-03-01 22:21:44,295 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000114' which have shape '(300, 23)'
+2020-03-01 22:21:44,297 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000115' which have shape '(300, 23)'
+2020-03-01 22:21:44,299 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000116' which have shape '(300, 23)'
+2020-03-01 22:21:44,302 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000117' which have shape '(300, 23)'
+2020-03-01 22:21:44,304 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000118' which have shape '(300, 23)'
+2020-03-01 22:21:44,306 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000119' which have shape '(300, 23)'
+2020-03-01 22:21:44,308 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000120' which have shape '(300, 23)'
+LOG (apply-cmvn-sliding[5.5.490~1-b2f64]:main():apply-cmvn-sliding.cc:75) Applied sliding-window cepstral mean normalization to 127 utterances, 0 had errors.
+2020-03-01 22:21:44,310 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000121' which have shape '(300, 23)'
+2020-03-01 22:21:44,312 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000122' which have shape '(300, 23)'
+2020-03-01 22:21:44,314 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000123' which have shape '(300, 23)'
+LOG (select-voiced-frames[5.5.490~1-b2f64]:main():select-voiced-frames.cc:106) Done selecting voiced frames; processed 127 utterances, 0 had errors.
+2020-03-01 22:21:44,317 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000124' which have shape '(300, 23)'
+2020-03-01 22:21:44,319 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000125' which have shape '(268, 23)'
+2020-03-01 22:21:44,332 [/media/punch/DriveE/linux/kaldi/egs/sre16/senior-webapp/backend/kaldi/local/tf/models.py:336 - make_embedding - INFO ] Processing features with key 'demo-000126' which have shape '(30, 23)'
+LOG (copy-vector[5.5.490~1-b2f64]:main():copy-vector.cc:90) Copied 127 vectors.
+model_path exp/pvector_net/models/0_vector_best.h5
+demo-000000 exp/pvector_net/pvector_prod//xvector.ark:12
+demo-000001 exp/pvector_net/pvector_prod//xvector.ark:2082
+demo-000002 exp/pvector_net/pvector_prod//xvector.ark:4152
+demo-000003 exp/pvector_net/pvector_prod//xvector.ark:6222
+demo-000004 exp/pvector_net/pvector_prod//xvector.ark:8292
+demo-000005 exp/pvector_net/pvector_prod//xvector.ark:10362
+demo-000006 exp/pvector_net/pvector_prod//xvector.ark:12432
+demo-000007 exp/pvector_net/pvector_prod//xvector.ark:14502
+demo-000008 exp/pvector_net/pvector_prod//xvector.ark:16572
+demo-000009 exp/pvector_net/pvector_prod//xvector.ark:18642
+demo-000010 exp/pvector_net/pvector_prod//xvector.ark:20712
+demo-000011 exp/pvector_net/pvector_prod//xvector.ark:22782
+demo-000012 exp/pvector_net/pvector_prod//xvector.ark:24852
+demo-000013 exp/pvector_net/pvector_prod//xvector.ark:26922
+demo-000014 exp/pvector_net/pvector_prod//xvector.ark:28992
+demo-000015 exp/pvector_net/pvector_prod//xvector.ark:31062
+demo-000016 exp/pvector_net/pvector_prod//xvector.ark:33132
+demo-000018 exp/pvector_net/pvector_prod//xvector.ark:35202
+demo-000019 exp/pvector_net/pvector_prod//xvector.ark:37272
+demo-000020 exp/pvector_net/pvector_prod//xvector.ark:39342
+demo-000021 exp/pvector_net/pvector_prod//xvector.ark:41412
+demo-000022 exp/pvector_net/pvector_prod//xvector.ark:43482
+demo-000023 exp/pvector_net/pvector_prod//xvector.ark:45552
+demo-000024 exp/pvector_net/pvector_prod//xvector.ark:47622
+demo-000025 exp/pvector_net/pvector_prod//xvector.ark:49692
+demo-000026 exp/pvector_net/pvector_prod//xvector.ark:51762
+demo-000027 exp/pvector_net/pvector_prod//xvector.ark:53832
+demo-000028 exp/pvector_net/pvector_prod//xvector.ark:55902
+demo-000029 exp/pvector_net/pvector_prod//xvector.ark:57972
+demo-000030 exp/pvector_net/pvector_prod//xvector.ark:60042
+demo-000031 exp/pvector_net/pvector_prod//xvector.ark:62112
+demo-000032 exp/pvector_net/pvector_prod//xvector.ark:64182
+demo-000033 exp/pvector_net/pvector_prod//xvector.ark:66252
+demo-000034 exp/pvector_net/pvector_prod//xvector.ark:68322
+demo-000036 exp/pvector_net/pvector_prod//xvector.ark:70392
+demo-000037 exp/pvector_net/pvector_prod//xvector.ark:72462
+demo-000038 exp/pvector_net/pvector_prod//xvector.ark:74532
+demo-000039 exp/pvector_net/pvector_prod//xvector.ark:76602
+demo-000040 exp/pvector_net/pvector_prod//xvector.ark:78672
+demo-000041 exp/pvector_net/pvector_prod//xvector.ark:80742
+demo-000042 exp/pvector_net/pvector_prod//xvector.ark:82812
+demo-000043 exp/pvector_net/pvector_prod//xvector.ark:84882
+demo-000044 exp/pvector_net/pvector_prod//xvector.ark:86952
+demo-000045 exp/pvector_net/pvector_prod//xvector.ark:89022
+demo-000046 exp/pvector_net/pvector_prod//xvector.ark:91092
+demo-000047 exp/pvector_net/pvector_prod//xvector.ark:93162
+demo-000048 exp/pvector_net/pvector_prod//xvector.ark:95232
+demo-000049 exp/pvector_net/pvector_prod//xvector.ark:97302
+demo-000050 exp/pvector_net/pvector_prod//xvector.ark:99372
+demo-000051 exp/pvector_net/pvector_prod//xvector.ark:101442
+demo-000052 exp/pvector_net/pvector_prod//xvector.ark:103512
+demo-000054 exp/pvector_net/pvector_prod//xvector.ark:105582
+demo-000055 exp/pvector_net/pvector_prod//xvector.ark:107652
+demo-000056 exp/pvector_net/pvector_prod//xvector.ark:109722
+demo-000057 exp/pvector_net/pvector_prod//xvector.ark:111792
+demo-000058 exp/pvector_net/pvector_prod//xvector.ark:113862
+demo-000059 exp/pvector_net/pvector_prod//xvector.ark:115932
+demo-000060 exp/pvector_net/pvector_prod//xvector.ark:118002
+demo-000061 exp/pvector_net/pvector_prod//xvector.ark:120072
+demo-000062 exp/pvector_net/pvector_prod//xvector.ark:122142
+demo-000063 exp/pvector_net/pvector_prod//xvector.ark:124212
+demo-000064 exp/pvector_net/pvector_prod//xvector.ark:126282
+demo-000065 exp/pvector_net/pvector_prod//xvector.ark:128352
+demo-000066 exp/pvector_net/pvector_prod//xvector.ark:130422
+demo-000067 exp/pvector_net/pvector_prod//xvector.ark:132492
+demo-000068 exp/pvector_net/pvector_prod//xvector.ark:134562
+demo-000069 exp/pvector_net/pvector_prod//xvector.ark:136632
+demo-000070 exp/pvector_net/pvector_prod//xvector.ark:138702
+demo-000017 exp/pvector_net/pvector_prod//xvector.ark:140772
+demo-000035 exp/pvector_net/pvector_prod//xvector.ark:142842
+demo-000053 exp/pvector_net/pvector_prod//xvector.ark:144912
+demo-000071 exp/pvector_net/pvector_prod//xvector.ark:146982
+demo-000089 exp/pvector_net/pvector_prod//xvector.ark:149052
+demo-000107 exp/pvector_net/pvector_prod//xvector.ark:151122
+demo-000072 exp/pvector_net/pvector_prod//xvector.ark:153192
+demo-000073 exp/pvector_net/pvector_prod//xvector.ark:155262
+demo-000074 exp/pvector_net/pvector_prod//xvector.ark:157332
+demo-000075 exp/pvector_net/pvector_prod//xvector.ark:159402
+demo-000076 exp/pvector_net/pvector_prod//xvector.ark:161472
+demo-000077 exp/pvector_net/pvector_prod//xvector.ark:163542
+demo-000078 exp/pvector_net/pvector_prod//xvector.ark:165612
+demo-000079 exp/pvector_net/pvector_prod//xvector.ark:167682
+demo-000080 exp/pvector_net/pvector_prod//xvector.ark:169752
+demo-000081 exp/pvector_net/pvector_prod//xvector.ark:171822
+demo-000082 exp/pvector_net/pvector_prod//xvector.ark:173892
+demo-000083 exp/pvector_net/pvector_prod//xvector.ark:175962
+demo-000084 exp/pvector_net/pvector_prod//xvector.ark:178032
+demo-000085 exp/pvector_net/pvector_prod//xvector.ark:180102
+demo-000086 exp/pvector_net/pvector_prod//xvector.ark:182172
+demo-000087 exp/pvector_net/pvector_prod//xvector.ark:184242
+demo-000088 exp/pvector_net/pvector_prod//xvector.ark:186312
+demo-000090 exp/pvector_net/pvector_prod//xvector.ark:188382
+demo-000091 exp/pvector_net/pvector_prod//xvector.ark:190452
+demo-000092 exp/pvector_net/pvector_prod//xvector.ark:192522
+demo-000093 exp/pvector_net/pvector_prod//xvector.ark:194592
+demo-000094 exp/pvector_net/pvector_prod//xvector.ark:196662
+demo-000095 exp/pvector_net/pvector_prod//xvector.ark:198732
+demo-000096 exp/pvector_net/pvector_prod//xvector.ark:200802
+demo-000097 exp/pvector_net/pvector_prod//xvector.ark:202872
+demo-000098 exp/pvector_net/pvector_prod//xvector.ark:204942
+demo-000099 exp/pvector_net/pvector_prod//xvector.ark:207012
+demo-000100 exp/pvector_net/pvector_prod//xvector.ark:209082
+demo-000101 exp/pvector_net/pvector_prod//xvector.ark:211152
+demo-000102 exp/pvector_net/pvector_prod//xvector.ark:213222
+demo-000103 exp/pvector_net/pvector_prod//xvector.ark:215292
+demo-000104 exp/pvector_net/pvector_prod//xvector.ark:217362
+demo-000105 exp/pvector_net/pvector_prod//xvector.ark:219432
+demo-000106 exp/pvector_net/pvector_prod//xvector.ark:221502
+demo-000108 exp/pvector_net/pvector_prod//xvector.ark:223572
+demo-000109 exp/pvector_net/pvector_prod//xvector.ark:225642
+demo-000110 exp/pvector_net/pvector_prod//xvector.ark:227712
+demo-000111 exp/pvector_net/pvector_prod//xvector.ark:229782
+demo-000112 exp/pvector_net/pvector_prod//xvector.ark:231852
+demo-000113 exp/pvector_net/pvector_prod//xvector.ark:233922
+demo-000114 exp/pvector_net/pvector_prod//xvector.ark:235992
+demo-000115 exp/pvector_net/pvector_prod//xvector.ark:238062
+demo-000116 exp/pvector_net/pvector_prod//xvector.ark:240132
+demo-000117 exp/pvector_net/pvector_prod//xvector.ark:242202
+demo-000118 exp/pvector_net/pvector_prod//xvector.ark:244272
+demo-000119 exp/pvector_net/pvector_prod//xvector.ark:246342
+demo-000120 exp/pvector_net/pvector_prod//xvector.ark:248412
+demo-000121 exp/pvector_net/pvector_prod//xvector.ark:250482
+demo-000122 exp/pvector_net/pvector_prod//xvector.ark:252552
+demo-000123 exp/pvector_net/pvector_prod//xvector.ark:254622
+demo-000124 exp/pvector_net/pvector_prod//xvector.ark:256692
+demo-000125 exp/pvector_net/pvector_prod//xvector.ark:258762
+demo-000126 exp/pvector_net/pvector_prod//xvector.ark:260832
+
+# Accounting: time=3 threads=1
+# Ended (code 0) at Sun Mar  1 22:21:44 +07 2020, elapsed time 3 seconds
