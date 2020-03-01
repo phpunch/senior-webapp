@@ -35,7 +35,7 @@ class Politician extends Component {
         return (
           <tr>
             <th scope="row">{person["index"]}</th>
-            <td>{person[""]}</td>
+            <td>{person["name"]}</td>
           </tr>
         );
       });
