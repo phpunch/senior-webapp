@@ -8,12 +8,9 @@ import {
   Button,
   CircularProgress,
   Grid,
-  Container,
-  Box
 } from "@material-ui/core";
 import TextInput from "../../components/TextInput";
 
-import { makeStyles } from "@material-ui/styles";
 
 class Demo extends Component {
   state = {
@@ -125,32 +122,41 @@ class Demo extends Component {
     }
 
     return (
-      <Grid container spacing={4} justify="center">
-        <Grid item lg={6} sm={12} xl={12} xs={12} >
-          <Box mx="auto" bgcolor="background.paper" p={5}>
+      <div style={{ padding: 30 }}>
+        <Grid container spacing={4} justify="center">
+          <Grid
+            item
+            lg={6}
+            sm={12}
+            xl={12}
+            xs={12}
+            alignItems="center"
+            justify="center"
+          >
+            {/* <Box mx="auto" bgcolor="primary.main" p={5}> */}
             <ReactYoutube
-              mx="auto"
               videoId={this.props.videoId}
               setCurrentTimeHandler={this.setCurrentTimeHandler}
             />
-          </Box>
+            {/* </Box> */}
+          </Grid>
+          <Grid item lg={6} sm={12} xl={12} xs={12} alignItems="center">
+            <div className="card card-body">
+              Current Time: {this.state.currentTime}
+            </div>
+            <div className="card card-body">
+              Original Predict: {originalPredict}
+            </div>
+            <div className="card card-body">
+              Predict:
+              <div className="card card-body">{textInput}</div>
+            </div>
+            <Button variant="contained" color="primary">
+              Print!
+            </Button>
+          </Grid>
         </Grid>
-        <Grid item lg={3} sm={6} xl={3} xs={12} justify="center">
-          <div className="card card-body">
-            Current Time: {this.state.currentTime}
-          </div>
-          <div className="card card-body">
-            Original Predict: {originalPredict}
-          </div>
-          <div className="card card-body">
-            Predict:
-            <div className="card card-body">{textInput}</div>
-          </div>
-          <Button variant="contained" color="primary">
-            Print!
-          </Button>
-        </Grid>
-      </Grid>
+      </div>
     );
   }
 }
