@@ -6,7 +6,7 @@ class DemoController extends Component {
     return (
       <div>
         <Demo videoId="kHk5muJUwuw" prediction_filename="result_prod_c2_v2_clean.txt" />
-        <Demo videoId="Y70hiPNxe4Q" prediction_filename="result_prod_clean.txt" />
+        {/* <Demo videoId="Y70hiPNxe4Q" prediction_filename="result_prod_clean.txt" /> */}
       </div>
     )
   }
