@@ -4,13 +4,9 @@ import ReactYoutube from "../../components/ReactYoutube";
 import Papa from "papaparse";
 import csv from "../Politician/politician_list.csv";
 
-import {
-  Button,
-  CircularProgress,
-  Grid,
-} from "@material-ui/core";
+import { Button, CircularProgress, Grid, Box } from "@material-ui/core";
 import TextInput from "../../components/TextInput";
-
+import Card from "../../components/Card";
 
 class Demo extends Component {
   state = {
@@ -19,7 +15,8 @@ class Demo extends Component {
     politician_spk2idx: {},
     prediction_original: null,
     prediction: null,
-    value: ""
+    value: "",
+    text: ""
   };
 
   setCurrentTimeHandler = time => {
@@ -98,6 +95,12 @@ class Demo extends Component {
     });
   };
 
+  printLabel = () => {
+    this.setState(prevState => ({
+      newLabel: prevState.prediction
+    }));
+  };
+
   render() {
     let originalPredict = "";
     let textInput = <CircularProgress />;
@@ -121,6 +124,15 @@ class Demo extends Component {
       originalPredict = this.state.politician_idx2spk[label];
     }
 
+    let newLabel = <p></p>
+    if (this.state.newLabel) {
+      newLabel = this.state.newLabel.map(element => {
+        return <p>
+          {element}
+        </p>
+      })
+    }
+
     return (
       <div style={{ padding: 30 }}>
         <Grid container spacing={4} justify="center">
@@ -128,32 +140,32 @@ class Demo extends Component {
             item
             lg={6}
             sm={12}
-            xl={12}
+            xl={6}
             xs={12}
             alignItems="center"
             justify="center"
           >
-            {/* <Box mx="auto" bgcolor="primary.main" p={5}> */}
-            <ReactYoutube
-              videoId={this.props.videoId}
-              setCurrentTimeHandler={this.setCurrentTimeHandler}
-            />
-            {/* </Box> */}
+            <Box borderRadius={16} bgcolor="background.paper" p={5}>
+              <ReactYoutube
+                videoId={this.props.videoId}
+                setCurrentTimeHandler={this.setCurrentTimeHandler}
+              />
+            </Box>
           </Grid>
-          <Grid item lg={6} sm={12} xl={12} xs={12} alignItems="center">
-            <div className="card card-body">
-              Current Time: {this.state.currentTime}
-            </div>
-            <div className="card card-body">
-              Original Predict: {originalPredict}
-            </div>
-            <div className="card card-body">
-              Predict:
-              <div className="card card-body">{textInput}</div>
-            </div>
-            <Button variant="contained" color="primary">
-              Print!
-            </Button>
+          <Grid item lg={6} sm={12} xl={6} xs={12} alignItems="center">
+            <Box borderRadius={16} bgcolor="background.paper" p={5}>
+              <Card text={`Current Time: ${this.state.currentTime}`} />
+              <Card text={`Original Predict: ${originalPredict}`} />
+              {textInput}
+            </Box>
+          </Grid>
+          <Grid item lg={6} sm={12} xl={6} xs={12} alignItems="center">
+            <Box borderRadius={16} bgcolor="background.paper" p={5}>
+              <Button variant="contained" color="primary" onClick={this.printLabel}>
+                Print!
+              </Button>
+              {newLabel}
+            </Box>
           </Grid>
         </Grid>
       </div>

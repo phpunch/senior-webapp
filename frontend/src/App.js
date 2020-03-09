@@ -16,12 +16,12 @@ const themeDark = createMuiTheme({
       default: "#121212"
     },
     primary: {
-      main: "#BC1212"
+      main: "#424242"
     },
     secondary: {
       main: "#03DAC6"
     }
-  }
+  },
 });
 
 const App = () => {
