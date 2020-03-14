@@ -7,6 +7,7 @@ import os
 import glob
 import shutil
 
+from kaldi.find_best_plda import find_best_plda
 
 class YoutubeExistError(Exception): pass
 class AudiosExistError(Exception): pass
@@ -63,24 +64,24 @@ def test():
     command = "./run_prod.sh"
     subprocess.check_call(command, shell=True)
 
-    command = "sort exp/result_prod.txt > exp/result_sorted.txt"
-    subprocess.check_call(command, shell=True)
+    find_best_plda()
+    # command = "sort exp/result_prod.txt > exp/result_sorted.txt"
+    # subprocess.check_call(command, shell=True)
 
-    # read the result
-    with open("exp/result_sorted.txt") as f:
-      prediction = []
-      prediction_list = [row.strip() for row in f.readlines()]
-      for row in prediction_list:
-          name, _, _, _, _, label, score = row.split(" ")
-          print(name, label, score)
-          prediction.append({
-              "name": name,
-              "label": label,
-              "score": score
-          })
+    # # read the result
+    # with open("exp/result_sorted.txt") as f:
+    #   prediction = []
+    #   prediction_list = [row.strip() for row in f.readlines()]
+    #   for row in prediction_list:
+    #       name, _, _, _, _, label, score = row.split(" ")
+    #       print(name, label, score)
+    #       prediction.append({
+    #           "name": name,
+    #           "label": label,
+    #           "score": score
+    #       })
     
     os.chdir("..")
-    return prediction
     
   except subprocess.CalledProcessError as exc:
     print("Status : FAIL", exc.returncode, exc.output)

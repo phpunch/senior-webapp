@@ -40,7 +40,7 @@ $train_cmd exp/scores/log/prod-clean-scoring.log \
    "ark:ivector-subtract-global-mean $vector_adapt_dir/mean.vec scp:$vector_prod_dir/xvector.scp ark:- | transform-vec $vector_train_dir/transform.mat ark:- ark:- | ivector-normalize-length ark:- ark:- |" \
    "cat 'exp/trial_prod' | cut -d\  --fields=1,2 |" exp/scores/scores-prod-clean || exit 1;
 
-echo "Find best PLDA"
-bash ./find_best_plda.sh exp/scores/scores-prod-clean exp/result_prod.txt
+# echo "Find best PLDA"
+# bash ./find_best_plda.sh exp/scores/scores-prod-clean exp/result_prod.txt
 
-echo "Done"
+# echo "Done"

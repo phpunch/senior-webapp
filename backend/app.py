@@ -6,12 +6,13 @@ from jsonschema import validate, ValidationError
 from pydub import AudioSegment
 import io
 import os
-
 import subprocess
 import os
+import pickle
+from pprint import pprint
 
 import predict
-
+from save_label import save_label
 
 
 class HandleCORS(object):
@@ -75,6 +76,7 @@ class AudioStorage(object):
             with open("../../v13_parliament_v3/exp/result_prod.txt") as f:
               text = f.read()
               print(text)
+            
         except subprocess.CalledProcessError as exc:
           print("Status : FAIL", exc.returncode, exc.output)
           print("CallProcessError")
@@ -101,11 +103,28 @@ class AudioStorage(object):
         predict.audio_segmentation()
         predict.write_wav_file()
         prediction = predict.test()
+        with open("kaldi/prediction.pkl", "rb") as f:
+          prediction = pickle.load(f)
+          pprint(prediction)
       except:
-        raise
+        raise Exception
       output = {
           'method': 'post',
           'prediction': prediction
+      }
+
+      resp.status = falcon.HTTP_200
+      resp.body = json.dumps(output)
+
+    def on_post_save(self, req, resp, data=None):
+      try:
+        print(data)
+        save_label(data["video_id"], data["label_list"])
+      except:
+        raise Exception
+      output = {
+          'method': 'post',
+          'success': 1
       }
 
       resp.status = falcon.HTTP_200
@@ -115,5 +134,6 @@ class AudioStorage(object):
 app_api = falcon.API(middleware=[HandleCORS(), LoadJsonBodyMiddleware(), MultipartMiddleware()])
 app_api.add_route('/upload', AudioStorage(), suffix="upload")
 app_api.add_route('/youtube', AudioStorage(), suffix="youtube")
+app_api.add_route('/save', AudioStorage(), suffix="save")
 
 # serve(app, host="127.0.0.1", port=8000)
