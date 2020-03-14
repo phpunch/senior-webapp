@@ -1,17 +1,26 @@
 import React, { Component } from "react";
 import ReactYoutube from "../../components/ReactYoutube";
 import axios from "axios";
-import queryString from "query-string"
+import queryString from "query-string";
 
 import Papa from "papaparse";
 import csv from "../Politician/politician_list.csv";
 
+import { Button, CircularProgress, Grid, Box } from "@material-ui/core";
+import TextInput from "../../components/TextInput";
+import Card from "../../components/Card";
+
 class DemoYoutube extends Component {
   state = {
     currentTime: 0,
-    youtube_url: "",
-    politician_list: null,
-    is_loading: false
+    youtube_url:
+      "https://www.youtube.com/watch?v=kHk5muJUwuw&feature=emb_title",
+    prediction: null,
+    prediction_original: null,
+    politician_idx2spk: [],
+    politician_spk2idx: {},
+    is_loading: false,
+    is_saved: false
   };
 
   setCurrentTimeHandler = time => {
@@ -29,11 +38,11 @@ class DemoYoutube extends Component {
 
   sendRequest = async () => {
     this.setState({
-        is_loading: true
-    })
-    const query = this.state.youtube_url.split("?")[1]
-    const urlParams = queryString.parse(query)
-    console.log(urlParams)
+      is_loading: true
+    });
+    const query = this.state.youtube_url.split("?")[1];
+    const urlParams = queryString.parse(query);
+    console.log(urlParams);
     const data = {
       ...this.state
     };
@@ -42,7 +51,8 @@ class DemoYoutube extends Component {
       const res = await axios.post("http://localhost:8000/youtube", data);
       console.log(res.data.prediction);
       this.setState({
-        prediction: res.data.prediction,
+        prediction: [...res.data.prediction],
+        prediction_original: [...res.data.prediction],
         videoId: urlParams.v,
         is_loading: false
       });
@@ -63,23 +73,88 @@ class DemoYoutube extends Component {
     });
   };
 
+  setNewLabel = (event, value) => {
+    const prediction = [...this.state.prediction]; // copy prediction
+    const idx = Math.floor(this.state.currentTime / 3); // calculate index by current time
+
+    const new_label = this.state.politician_spk2idx[value]; // get label from dictation
+    prediction[idx].label = new_label; // put label back in prediction
+
+    this.setState({
+      prediction: prediction
+    });
+  };
+
   setPoliticianList = data => {
+    const politician_idx2spk = [];
+    data.data.map(element => {
+      return politician_idx2spk.push(element.name);
+    });
+
+    const politician_spk2idx = {};
+    for (let i = 0; i <= politician_idx2spk.length; i++) {
+      politician_spk2idx[politician_idx2spk[i]] = i;
+    }
+    console.log(politician_spk2idx);
+
     this.setState(
       {
-        politician_list: data.data
+        politician_idx2spk: politician_idx2spk,
+        politician_spk2idx: politician_spk2idx
+      },
+      () => {
+        console.log(this.state.politician_idx2spk);
       }
     );
   };
 
-  
+  printLabel = () => {
+    this.setState(prevState => ({
+      newLabel: prevState.prediction
+    }));
+  };
+
+  saveLabel = () => {
+    try {
+      const data = {
+        "video_id": this.state.videoId,
+        "label_list": this.state.prediction
+      }
+      const res = axios.post("http://localhost:8000/save", data)
+      console.log(res.data)
+      this.setState({
+        is_saved: true
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  };
 
   render() {
-    let name = "";
+    let originalPredict = "";
+
+    let textInput = <CircularProgress />;
     if (this.state.prediction && this.state.currentTime) {
       const idx = Math.floor(this.state.currentTime / 3);
-      const label = this.state.prediction[idx].label
-      name = this.state.politician_list[parseInt(label)].name;
+      const label = parseInt(this.state.prediction[idx].label);
+
+      textInput = (
+        <TextInput
+          options={this.state.politician_idx2spk}
+          onInputChange={this.setNewLabel}
+          defaultValue={this.state.politician_idx2spk[label]}
+          key={`movingContactName:${this.state.politician_idx2spk[label]}`}
+        />
+      );
     }
+    if (this.state.prediction_original && this.state.currentTime) {
+      const idx = Math.floor(this.state.currentTime / 3);
+      const label = parseInt(this.state.prediction_original[idx].label);
+      // console.log("ORIGINAL")
+      // console.log(this.state.prediction_original[idx])
+      originalPredict = this.state.politician_idx2spk[label];
+    }
+
     let youtube = <p></p>;
     if (this.state.prediction) {
       youtube = (
@@ -89,10 +164,37 @@ class DemoYoutube extends Component {
         />
       );
     }
+
+    let newLabel = <p></p>;
+    if (this.state.newLabel) {
+      // console.log(this.state.newLabel)
+      newLabel = this.state.newLabel.map(obj => {
+        return (
+          <div>
+            <p>{this.state.politician_idx2spk[parseInt(obj.label)]}</p>
+            <p>
+              {obj.filename} {obj.label}
+            </p>
+          </div>
+        );
+      });
+    }
+
     return (
-      <div className="container">
-        <div className="row">
-          <div className="offset-md-3 col-md-6">
+      <div style={{ padding: 30 }}>
+        <Grid container spacing={4} justify="center">
+          <Grid
+            item
+            lg={6}
+            sm={12}
+            xl={6}
+            xs={12}
+            alignItems="center"
+            justify="center"
+          >
+            <Box borderRadius={16} bgcolor="background.paper" p={5}>
+              {youtube}
+            </Box>
             <input
               type="text"
               value={this.state.youtube_url}
@@ -106,13 +208,27 @@ class DemoYoutube extends Component {
             >
               Send!
             </button>
-
-            {youtube}
-            <div className="card card-body">
-              Predict: {name}
-            </div>
-          </div>
-        </div>
+          </Grid>
+          <Grid item lg={6} sm={12} xl={6} xs={12} alignItems="center">
+            <Box borderRadius={16} bgcolor="background.paper" p={5}>
+              <Card text={`Current Time: ${this.state.currentTime}`} />
+              <Card text={`Original Predict: ${originalPredict}`} />
+              {textInput}
+            </Box>
+          </Grid>
+          <Grid item lg={6} sm={12} xl={6} xs={12} alignItems="center">
+            <Box borderRadius={16} bgcolor="background.paper" p={5}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={this.saveLabel}
+              >
+                Save!
+              </Button>
+              {this.state.is_saved ? "Yay" : ":("}
+            </Box>
+          </Grid>
+        </Grid>
       </div>
     );
   }

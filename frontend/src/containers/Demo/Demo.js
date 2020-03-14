@@ -126,9 +126,9 @@ class Demo extends Component {
 
     let newLabel = <p></p>
     if (this.state.newLabel) {
-      newLabel = this.state.newLabel.map(element => {
+      newLabel = this.state.newLabel.map(idx => {
         return <p>
-          {element}
+          {this.state.politician_idx2spk[idx]}
         </p>
       })
     }
