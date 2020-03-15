@@ -9,6 +9,7 @@ import csv from "../Politician/politician_list.csv";
 import { Button, CircularProgress, Grid, Box } from "@material-ui/core";
 import TextInput from "../../components/TextInput";
 import Card from "../../components/Card";
+import Chart from '../../components/Chart'
 
 class DemoYoutube extends Component {
   state = {
@@ -72,6 +73,24 @@ class DemoYoutube extends Component {
       complete: this.setPoliticianList
     });
   };
+  setPoliticianList = data => {
+    const politician_idx2spk = [];
+    data.data.map(element => {
+      return politician_idx2spk.push(element.name);
+    });
+
+    const politician_spk2idx = {};
+    for (let i = 0; i <= politician_idx2spk.length; i++) {
+      politician_spk2idx[politician_idx2spk[i]] = i;
+    }
+
+    this.setState(
+      {
+        politician_idx2spk: politician_idx2spk,
+        politician_spk2idx: politician_spk2idx
+      }
+    );
+  };
 
   setNewLabel = (event, value) => {
     const prediction = [...this.state.prediction]; // copy prediction
@@ -83,29 +102,6 @@ class DemoYoutube extends Component {
     this.setState({
       prediction: prediction
     });
-  };
-
-  setPoliticianList = data => {
-    const politician_idx2spk = [];
-    data.data.map(element => {
-      return politician_idx2spk.push(element.name);
-    });
-
-    const politician_spk2idx = {};
-    for (let i = 0; i <= politician_idx2spk.length; i++) {
-      politician_spk2idx[politician_idx2spk[i]] = i;
-    }
-    console.log(politician_spk2idx);
-
-    this.setState(
-      {
-        politician_idx2spk: politician_idx2spk,
-        politician_spk2idx: politician_spk2idx
-      },
-      () => {
-        console.log(this.state.politician_idx2spk);
-      }
-    );
   };
 
   printLabel = () => {
@@ -131,9 +127,8 @@ class DemoYoutube extends Component {
   };
 
   render() {
-    let originalPredict = "";
-
     let textInput = <CircularProgress />;
+    let chart = <Chart />
     if (this.state.prediction && this.state.currentTime) {
       const idx = Math.floor(this.state.currentTime / 3);
       const label = parseInt(this.state.prediction[idx].label);
@@ -146,15 +141,23 @@ class DemoYoutube extends Component {
           key={`movingContactName:${this.state.politician_idx2spk[label]}`}
         />
       );
-    }
-    if (this.state.prediction_original && this.state.currentTime) {
-      const idx = Math.floor(this.state.currentTime / 3);
-      const label = parseInt(this.state.prediction_original[idx].label);
-      // console.log("ORIGINAL")
-      // console.log(this.state.prediction_original[idx])
-      originalPredict = this.state.politician_idx2spk[label];
-    }
 
+      let scores = this.state.prediction[idx].scores
+      let chart_data = []
+      for (const index in scores) {
+        const label = scores[index][0]
+        const score = scores[index][1]
+        
+        chart_data.push({
+          "name": this.state.politician_idx2spk[parseInt(label)],
+          "score": score
+        })
+      }
+      console.log(chart_data)
+      chart = (
+        <Chart data={chart_data}/>
+      )
+    }
     let youtube = <p></p>;
     if (this.state.prediction) {
       youtube = (
@@ -212,7 +215,7 @@ class DemoYoutube extends Component {
           <Grid item lg={6} sm={12} xl={6} xs={12} alignItems="center">
             <Box borderRadius={16} bgcolor="background.paper" p={5}>
               <Card text={`Current Time: ${this.state.currentTime}`} />
-              <Card text={`Original Predict: ${originalPredict}`} />
+              <Card text={`Original Predict: ?`} />
               {textInput}
             </Box>
           </Grid>
@@ -226,6 +229,11 @@ class DemoYoutube extends Component {
                 Save!
               </Button>
               {this.state.is_saved ? "Yay" : ":("}
+            </Box>
+          </Grid>
+          <Grid item lg={6} sm={12} xl={6} xs={12} alignItems="center">
+            <Box borderRadius={16} bgcolor="background.paper" p={5}>
+              {chart}
             </Box>
           </Grid>
         </Grid>
