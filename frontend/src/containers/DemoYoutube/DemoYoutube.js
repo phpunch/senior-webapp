@@ -48,7 +48,7 @@ class DemoYoutube extends Component {
     };
     console.log(data);
     try {
-      const res = await axios.post("http://34.71.69.50:8000/youtube", data);
+      const res = await axios.post("http://localhost:8000/youtube", data);
       console.log(res.data.prediction);
       this.setState({
         prediction: [...res.data.prediction],
@@ -118,7 +118,7 @@ class DemoYoutube extends Component {
         "video_id": this.state.videoId,
         "label_list": this.state.prediction
       }
-      const res = await axios.post("http://34.71.69.50:8000/save", data)
+      const res = await axios.post("http://localhost:8000/save", data)
       console.log(res.data)
       this.setState({
         is_saved: true
