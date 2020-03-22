@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import Papa from "papaparse";
 import csv from "./politician_list.csv";
+import { Button, CircularProgress, Grid, Box } from "@material-ui/core";
+
 class Politician extends Component {
   state = {
     data: null
@@ -53,9 +55,13 @@ class Politician extends Component {
     }
 
     return (
-      <div className="container">
-        politician_list
-        {table}
+      <div style={{ padding: 20 }}>
+        <Grid container justify="center">
+          <Box borderRadius={16} bgcolor="background.paper" p={5}>
+            politician_list
+            {table}
+          </Box>
+        </Grid>
       </div>
     );
   }

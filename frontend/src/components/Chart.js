@@ -7,7 +7,8 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend
+  Legend,
+  ResponsiveContainer
 } from "recharts";
 
 export default class Example extends PureComponent {
@@ -15,24 +16,26 @@ export default class Example extends PureComponent {
 
   render() {
     return (
-      <BarChart
-        width={800}
-        height={300}
-        data={this.props.data}
-        margin={{
-          top: 5,
-          right: 30,
-          left: 20,
-          bottom: 5
-        }}
-      >
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="name" />
-        <YAxis />
-        <Tooltip />
-        <Legend />
-        <Bar dataKey="score" fill="#8884d8" />
-      </BarChart>
+        <BarChart
+          width={600}
+          height={300}
+          data={this.props.data}
+          margin={{
+            top: 5,
+            right: 30,
+            left: 20,
+            bottom: 5
+          }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="name" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Bar dataKey="score" fill="#8884d8" />
+        </BarChart>
+      
+      
     );
   }
 }

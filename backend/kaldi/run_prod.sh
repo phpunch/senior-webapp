@@ -21,7 +21,7 @@ ver=0
 
 # delete the old one before extracting
 echo "Extract Vector"
-./extract_vector.sh $nnet_dir $data $nnet_dir/pvector_prod/ ${ver}_vector_best.h5 || exit 1;
+./extract_vector.sh $nnet_dir $data $nnet_dir/pvector_prod/ vector_weights_4.hdf5 || exit 1;
 
 
 vector_train_dir=$nnet_dir/pvector_train_combined

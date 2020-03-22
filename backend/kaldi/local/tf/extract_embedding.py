@@ -14,7 +14,7 @@ import traceback
 
 import kaldi_io
 #import ze_utils as utils
-from models import MyModel, ModelTF
+from models import MyModel
 import warnings
 warnings.filterwarnings("ignore")
 warnings.simplefilter(action='ignore', category=FutureWarning)

@@ -17,7 +17,6 @@ class DemoYoutube extends Component {
     youtube_url:
       "https://www.youtube.com/watch?v=kHk5muJUwuw&feature=emb_title",
     prediction: null,
-    prediction_original: null,
     politician_idx2spk: [],
     politician_spk2idx: {},
     is_loading: false,
@@ -53,7 +52,6 @@ class DemoYoutube extends Component {
       console.log(res.data.prediction);
       this.setState({
         prediction: [...res.data.prediction],
-        prediction_original: [...res.data.prediction],
         videoId: urlParams.v,
         is_loading: false
       });
@@ -96,8 +94,12 @@ class DemoYoutube extends Component {
     const prediction = [...this.state.prediction]; // copy prediction
     const idx = Math.floor(this.state.currentTime / 3); // calculate index by current time
 
-    const new_label = this.state.politician_spk2idx[value]; // get label from dictation
-    prediction[idx].label = new_label; // put label back in prediction
+    if (value === "") {
+      prediction[idx].label = ""
+    } else {
+      prediction[idx].label = this.state.politician_spk2idx[value]; // change the label
+    }
+    // console.log(prediction[idx].label)
 
     this.setState({
       prediction: prediction
@@ -110,13 +112,13 @@ class DemoYoutube extends Component {
     }));
   };
 
-  saveLabel = () => {
+  saveLabel = async () => {
     try {
       const data = {
         "video_id": this.state.videoId,
         "label_list": this.state.prediction
       }
-      const res = axios.post("http://localhost:8000/save", data)
+      const res = await axios.post("http://localhost:8000/save", data)
       console.log(res.data)
       this.setState({
         is_saved: true
@@ -127,6 +129,7 @@ class DemoYoutube extends Component {
   };
 
   render() {
+    let old_label = ""
     let textInput = <CircularProgress />;
     let chart = <Chart />
     if (this.state.prediction && this.state.currentTime) {
@@ -142,6 +145,8 @@ class DemoYoutube extends Component {
         />
       );
 
+      
+
       let scores = this.state.prediction[idx].scores
       let chart_data = []
       for (const index in scores) {
@@ -153,7 +158,10 @@ class DemoYoutube extends Component {
           "score": score
         })
       }
-      console.log(chart_data)
+
+      old_label = this.state.politician_idx2spk[parseInt(scores[0][0])]
+
+      // console.log(chart_data)
       chart = (
         <Chart data={chart_data}/>
       )
@@ -178,6 +186,7 @@ class DemoYoutube extends Component {
             <p>
               {obj.filename} {obj.label}
             </p>
+            <p>-------------------------------</p>
           </div>
         );
       });
@@ -204,18 +213,18 @@ class DemoYoutube extends Component {
               onChange={this.textInputHandler}
               disabled={this.state.is_loading}
             />
-            <button
-              type="button"
-              className="btn btn-primary"
+            <Button
+              variant="contained"
+              color="secondary"
               onClick={this.sendRequest}
             >
               Send!
-            </button>
+            </Button>
           </Grid>
           <Grid item lg={6} sm={12} xl={6} xs={12} alignItems="center">
             <Box borderRadius={16} bgcolor="background.paper" p={5}>
               <Card text={`Current Time: ${this.state.currentTime}`} />
-              <Card text={`Original Predict: ?`} />
+              <Card text={`Original Predict: ${old_label}`} />
               {textInput}
             </Box>
           </Grid>
@@ -229,6 +238,14 @@ class DemoYoutube extends Component {
                 Save!
               </Button>
               {this.state.is_saved ? "Yay" : ":("}
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={this.printLabel}
+              >
+                Print!
+              </Button>
+              {newLabel}
             </Box>
           </Grid>
           <Grid item lg={6} sm={12} xl={6} xs={12} alignItems="center">

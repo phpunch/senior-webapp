@@ -45,7 +45,10 @@ def audio_segmentation():
     print("Fail {}".format(exc.output))
 
 def write_wav_file():
+  if (not os.path.exists("kaldi/data")):
+    os.mkdir("kaldi/data")
   path_list = glob.glob('audios/*')
+  path_list.sort()
   with open("kaldi/data/wav.scp", mode='w') as f:
       for path in path_list:
           name = os.path.basename(path)[:-4]
@@ -97,6 +100,8 @@ def clear_dir():
     os.remove("demo.wav")
   if (os.path.exists("audios")):
     shutil.rmtree("audios")
+  if (os.path.exists("kaldi/data")):
+    shutil.rmtree("kaldi/data")
   if (os.path.exists("kaldi/exp/pvector_net/pvector_prod")):
     shutil.rmtree("kaldi/exp/pvector_net/pvector_prod")
 

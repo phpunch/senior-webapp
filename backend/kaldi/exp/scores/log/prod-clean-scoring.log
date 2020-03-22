@@ -1,29 +1,29 @@
 # ivector-plda-scoring --normalize-length=true "ivector-copy-plda --smoothing=0.0 exp/pvector_net/pvector_adapt/plda_adapt - |" "ark:ivector-subtract-global-mean exp/pvector_net/pvector_adapt/mean.vec scp:exp/pvector_net/pvector_dev/spk_xvector.scp ark:- | transform-vec exp/pvector_net/pvector_train_combined/transform.mat ark:- ark:- | ivector-normalize-length ark:- ark:- |" "ark:ivector-subtract-global-mean exp/pvector_net/pvector_adapt/mean.vec scp:exp/pvector_net/pvector_prod/xvector.scp ark:- | transform-vec exp/pvector_net/pvector_train_combined/transform.mat ark:- ark:- | ivector-normalize-length ark:- ark:- |" "cat 'exp/trial_prod' | cut -d\  --fields=1,2 |" exp/scores/scores-prod-clean 
-# Started at Sat Mar 14 23:42:25 +07 2020
+# Started at Fri Mar 20 11:09:48 +07 2020
 #
 ivector-plda-scoring --normalize-length=true 'ivector-copy-plda --smoothing=0.0 exp/pvector_net/pvector_adapt/plda_adapt - |' 'ark:ivector-subtract-global-mean exp/pvector_net/pvector_adapt/mean.vec scp:exp/pvector_net/pvector_dev/spk_xvector.scp ark:- | transform-vec exp/pvector_net/pvector_train_combined/transform.mat ark:- ark:- | ivector-normalize-length ark:- ark:- |' 'ark:ivector-subtract-global-mean exp/pvector_net/pvector_adapt/mean.vec scp:exp/pvector_net/pvector_prod/xvector.scp ark:- | transform-vec exp/pvector_net/pvector_train_combined/transform.mat ark:- ark:- | ivector-normalize-length ark:- ark:- |' 'cat '\''exp/trial_prod'\'' | cut -d\  --fields=1,2 |' exp/scores/scores-prod-clean 
 ivector-copy-plda --smoothing=0.0 exp/pvector_net/pvector_adapt/plda_adapt - 
 transform-vec exp/pvector_net/pvector_train_combined/transform.mat ark:- ark:- 
 ivector-subtract-global-mean exp/pvector_net/pvector_adapt/mean.vec scp:exp/pvector_net/pvector_dev/spk_xvector.scp ark:- 
 ivector-normalize-length ark:- ark:- 
-LOG (ivector-subtract-global-mean[5.5.490~1-b2f64]:main():ivector-subtract-global-mean.cc:108) Wrote 136 mean-subtracted iVectors
-LOG (transform-vec[5.5.490~1-b2f64]:main():transform-vec.cc:85) Applied transform to 136 vectors.
+LOG (ivector-subtract-global-mean[5.5.490~1-b2f64]:main():ivector-subtract-global-mean.cc:108) Wrote 117 mean-subtracted iVectors
+LOG (transform-vec[5.5.490~1-b2f64]:main():transform-vec.cc:85) Applied transform to 117 vectors.
+ivector-subtract-global-mean exp/pvector_net/pvector_adapt/mean.vec scp:exp/pvector_net/pvector_prod/xvector.scp ark:- 
 transform-vec exp/pvector_net/pvector_train_combined/transform.mat ark:- ark:- 
 ivector-normalize-length ark:- ark:- 
-ivector-subtract-global-mean exp/pvector_net/pvector_adapt/mean.vec scp:exp/pvector_net/pvector_prod/xvector.scp ark:- 
+LOG (ivector-subtract-global-mean[5.5.490~1-b2f64]:main():ivector-subtract-global-mean.cc:108) Wrote 90 mean-subtracted iVectors
 LOG (ivector-plda-scoring[5.5.490~1-b2f64]:main():ivector-plda-scoring.cc:96) Reading train iVectors
-LOG (ivector-normalize-length[5.5.490~1-b2f64]:main():ivector-normalize-length.cc:90) Processed 136 iVectors.
-LOG (ivector-normalize-length[5.5.490~1-b2f64]:main():ivector-normalize-length.cc:94) Average ratio of iVector to expected length was 1.20342, standard deviation was 0.123631
-LOG (ivector-plda-scoring[5.5.490~1-b2f64]:main():ivector-plda-scoring.cc:122) Read 136 training iVectors, errors on 0
-LOG (ivector-plda-scoring[5.5.490~1-b2f64]:main():ivector-plda-scoring.cc:126) Average renormalization scale on training iVectors was 1.20154
+LOG (transform-vec[5.5.490~1-b2f64]:main():transform-vec.cc:85) Applied transform to 90 vectors.
+LOG (ivector-normalize-length[5.5.490~1-b2f64]:main():ivector-normalize-length.cc:90) Processed 117 iVectors.
+LOG (ivector-normalize-length[5.5.490~1-b2f64]:main():ivector-normalize-length.cc:94) Average ratio of iVector to expected length was 0.971058, standard deviation was 0.198277
+LOG (ivector-plda-scoring[5.5.490~1-b2f64]:main():ivector-plda-scoring.cc:122) Read 117 training iVectors, errors on 0
+LOG (ivector-plda-scoring[5.5.490~1-b2f64]:main():ivector-plda-scoring.cc:126) Average renormalization scale on training iVectors was 1.28839
 LOG (ivector-plda-scoring[5.5.490~1-b2f64]:main():ivector-plda-scoring.cc:129) Reading test iVectors
-LOG (ivector-subtract-global-mean[5.5.490~1-b2f64]:main():ivector-subtract-global-mean.cc:108) Wrote 237 mean-subtracted iVectors
-LOG (transform-vec[5.5.490~1-b2f64]:main():transform-vec.cc:85) Applied transform to 237 vectors.
-LOG (ivector-normalize-length[5.5.490~1-b2f64]:main():ivector-normalize-length.cc:90) Processed 237 iVectors.
-LOG (ivector-normalize-length[5.5.490~1-b2f64]:main():ivector-normalize-length.cc:94) Average ratio of iVector to expected length was 2.05206, standard deviation was 0.21776
-LOG (ivector-plda-scoring[5.5.490~1-b2f64]:main():ivector-plda-scoring.cc:147) Read 237 test iVectors.
-LOG (ivector-plda-scoring[5.5.490~1-b2f64]:main():ivector-plda-scoring.cc:150) Average renormalization scale on test iVectors was 1.08156
-LOG (ivector-plda-scoring[5.5.490~1-b2f64]:main():ivector-plda-scoring.cc:214) Mean score was -11.1588, standard deviation was 10.4364
-LOG (ivector-plda-scoring[5.5.490~1-b2f64]:main():ivector-plda-scoring.cc:217) Processed 32232 trials, 0 had errors.
+LOG (ivector-normalize-length[5.5.490~1-b2f64]:main():ivector-normalize-length.cc:90) Processed 90 iVectors.
+LOG (ivector-normalize-length[5.5.490~1-b2f64]:main():ivector-normalize-length.cc:94) Average ratio of iVector to expected length was 1.78095, standard deviation was 0.164712
+LOG (ivector-plda-scoring[5.5.490~1-b2f64]:main():ivector-plda-scoring.cc:147) Read 90 test iVectors.
+LOG (ivector-plda-scoring[5.5.490~1-b2f64]:main():ivector-plda-scoring.cc:150) Average renormalization scale on test iVectors was 1.13586
+LOG (ivector-plda-scoring[5.5.490~1-b2f64]:main():ivector-plda-scoring.cc:214) Mean score was -21.7038, standard deviation was 11.3725
+LOG (ivector-plda-scoring[5.5.490~1-b2f64]:main():ivector-plda-scoring.cc:217) Processed 10530 trials, 0 had errors.
 # Accounting: time=1 threads=1
-# Ended (code 0) at Sat Mar 14 23:42:26 +07 2020, elapsed time 1 seconds
+# Ended (code 0) at Fri Mar 20 11:09:49 +07 2020, elapsed time 1 seconds

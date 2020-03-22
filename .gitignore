@@ -1,6 +1,7 @@
 /.vscode
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+
 # dependencies
 frontend/node_modules
 
@@ -23,3 +24,6 @@ frontend/yarn-error.log*
 backend/*.wav
 backend/audios
 backend/__pycache__
+backend/kaldi/__pycache__
+backend/kaldi/exp/pvector_net
+backend/database
