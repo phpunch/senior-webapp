@@ -7,6 +7,7 @@ import csv from "../Politician/politician_list.csv";
 import { Button, CircularProgress, Grid, Box } from "@material-ui/core";
 import TextInput from "../../components/TextInput";
 import Card from "../../components/Card";
+import Slider from '../../components/Slider/Slider'
 
 class Demo extends Component {
   state = {
@@ -19,7 +20,7 @@ class Demo extends Component {
     text: ""
   };
 
-  setCurrentTimeHandler = time => {
+  getCurrentTimeHandler = time => {
     this.setState({
       currentTime: time
     });
@@ -104,6 +105,7 @@ class Demo extends Component {
   render() {
     let originalPredict = "";
     let textInput = <CircularProgress />;
+    let slider = <p></p>
     if (this.state.prediction && this.state.currentTime) {
       const idx = Math.floor(this.state.currentTime / 3);
       let label = parseInt(this.state.prediction[idx]);
@@ -116,6 +118,8 @@ class Demo extends Component {
           key={`movingContactName:${this.state.politician_idx2spk[label]}`}
         />
       );
+      console.log(this.state.prediction)
+      slider = <Slider list={this.state.prediction}/>
     }
     if (this.state.prediction_original && this.state.currentTime) {
       const idx = Math.floor(this.state.currentTime / 3);
@@ -131,6 +135,7 @@ class Demo extends Component {
           {this.state.politician_idx2spk[idx]}
         </p>
       })
+
     }
 
     return (
@@ -148,7 +153,7 @@ class Demo extends Component {
             <Box borderRadius={16} bgcolor="background.paper" p={5}>
               <ReactYoutube
                 videoId={this.props.videoId}
-                setCurrentTimeHandler={this.setCurrentTimeHandler}
+                getCurrentTimeHandler={this.getCurrentTimeHandler}
               />
             </Box>
           </Grid>
@@ -161,10 +166,11 @@ class Demo extends Component {
           </Grid>
           <Grid item lg={6} sm={12} xl={6} xs={12} alignItems="center">
             <Box borderRadius={16} bgcolor="background.paper" p={5}>
-              <Button variant="contained" color="primary" onClick={this.printLabel}>
+              {/* <Button variant="contained" color="primary" onClick={this.printLabel}>
                 Print!
               </Button>
-              {newLabel}
+              {newLabel} */}
+              {slider}
             </Box>
           </Grid>
         </Grid>

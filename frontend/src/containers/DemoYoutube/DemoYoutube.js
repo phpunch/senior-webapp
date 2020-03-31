@@ -6,10 +6,11 @@ import queryString from "query-string";
 import Papa from "papaparse";
 import csv from "../Politician/politician_list.csv";
 
-import { Button, CircularProgress, Grid, Box, TextField, FormControl } from "@material-ui/core";
+import { Button, CircularProgress, Grid, Box, TextField, FormControl, Backdrop } from "@material-ui/core";
 import TextInput from "../../components/TextInput";
 import Card from "../../components/Card";
 import Chart from '../../components/Chart'
+import Slider from '../../components/Slider/Slider'
 
 class DemoYoutube extends Component {
   state = {
@@ -20,14 +21,21 @@ class DemoYoutube extends Component {
     politician_idx2spk: [],
     politician_spk2idx: {},
     is_loading: false,
-    is_saved: false
+    is_saved: false,
+    error_msg: null,
   };
 
-  setCurrentTimeHandler = time => {
+  getCurrentTimeHandler = time => {
     this.setState({
       currentTime: time
     });
   };
+
+  // setCurrentTimeHandler = time => {
+  //   this.setState({
+  //     currentTime: time
+  //   })
+  // }
 
   textInputHandler = event => {
     this.setState({
@@ -48,7 +56,7 @@ class DemoYoutube extends Component {
     };
     console.log(data);
     try {
-      const res = await axios.post("http://34.71.69.50:8000/youtube", data);
+      const res = await axios.post("http://35.238.151.88:8000/youtube", data);
       console.log(res.data.prediction);
       this.setState({
         prediction: [...res.data.prediction],
@@ -57,6 +65,9 @@ class DemoYoutube extends Component {
       });
     } catch (error) {
       console.log(error);
+      this.setState({
+        error_msg: error.message
+      })
     }
   };
 
@@ -118,7 +129,7 @@ class DemoYoutube extends Component {
         "video_id": this.state.videoId,
         "label_list": this.state.prediction
       }
-      const res = await axios.post("http://34.71.69.50:8000/save", data)
+      const res = await axios.post("http://35.238.151.88:8000/save", data)
       console.log(res.data)
       this.setState({
         is_saved: true
@@ -130,18 +141,20 @@ class DemoYoutube extends Component {
 
   render() {
     let old_label = ""
-    let textInput = <CircularProgress />;
+    let textInput = <p></p>
     let chart = <Chart />
+    let slider = <p></p>
+    let youtube = <p></p>;
     if (this.state.prediction && this.state.currentTime) {
       const idx = Math.floor(this.state.currentTime / 3);
-      const label = parseInt(this.state.prediction[idx].label);
+      const label_id = parseInt(this.state.prediction[idx].label);
 
       textInput = (
         <TextInput
           options={this.state.politician_idx2spk}
           onInputChange={this.setNewLabel}
-          defaultValue={this.state.politician_idx2spk[label]}
-          key={`movingContactName:${this.state.politician_idx2spk[label]}`}
+          defaultValue={this.state.politician_idx2spk[label_id]}
+          key={`movingContactName:${this.state.politician_idx2spk[label_id]}`}
         />
       );
 
@@ -165,13 +178,25 @@ class DemoYoutube extends Component {
       chart = (
         <Chart data={chart_data} />
       )
+
+
+      const slider_list = this.state.prediction.map(frame => {
+        return {
+          'filename': frame.filename,
+          'name': this.state.politician_idx2spk[parseInt(frame.label)]
+        }
+      })
+      // console.log(slider_list)
+      slider = <Slider
+        list={slider_list}
+        selected={this.state.prediction[idx].filename}
+      />
     }
-    let youtube = <p></p>;
     if (this.state.prediction) {
       youtube = (
         <ReactYoutube
           videoId={this.state.videoId}
-          setCurrentTimeHandler={this.setCurrentTimeHandler}
+          getCurrentTimeHandler={this.getCurrentTimeHandler}
         />
       );
     }
@@ -201,7 +226,7 @@ class DemoYoutube extends Component {
             sm={12}
             xl={12}
             xs={12}>
-              
+
             <Box borderRadius={16} bgcolor="background.paper" p={5}>
               <FormControl fullWidth>
                 <TextField
@@ -221,8 +246,6 @@ class DemoYoutube extends Component {
                 Send!
               </Button>
             </Box>
-
-
           </Grid>
           <Grid
             item
@@ -243,6 +266,14 @@ class DemoYoutube extends Component {
               <Card text={`Current Time: ${this.state.currentTime}`} />
               <Card text={`Original Predict: ${old_label}`} />
               {textInput}
+            </Box>
+            <Box borderRadius={16} bgcolor="background.paper" p={5}>
+
+            </Box>
+          </Grid>
+          <Grid item lg={12} sm={12} xl={12} xs={12} alignItems="center">
+            <Box borderRadius={16} bgcolor="background.paper" p={5}>
+              {slider}
             </Box>
           </Grid>
           <Grid item lg={6} sm={12} xl={6} xs={12} alignItems="center">
@@ -271,7 +302,13 @@ class DemoYoutube extends Component {
             </Box>
           </Grid>
         </Grid>
-      </div>
+        <Backdrop style={{ zIndex: 999, color: '#000000', }} open={this.state.is_loading}>
+          <Box borderRadius={16} bgcolor="background.paper" p={5}>
+            <p>ระบบกำลังประมวลผล</p>
+            {this.state.error_msg ? <p>{this.state.error_msg}</p> : <CircularProgress color="primary"/>}
+          </Box>
+        </Backdrop>
+      </div >
     );
   }
 }

@@ -10,25 +10,25 @@ class ReactYoutube extends React.Component {
     event.target.pauseVideo();
   };
 
-  // videoOnPlay = (event) => {
+  // setCurrentTime = (event) => {
   //   const player = event.target
-  //   this.setState({
-  //       intervalID: setInterval(() => {this.props.setCurrentTimeHandler(player.getCurrentTime())}, 1000)
-  //   })
+  //   player.seekTo(this.props.currentTime, true)
 
+  //   // }
+  //   // videoOnPause = (event) => {
+  //   //   clearInterval(this.state.intervalID)
+  //   // }
   // }
-  // videoOnPause = (event) => {
-  //   clearInterval(this.state.intervalID)
-  // }
-
   videoOnStateChange = event => {
     clearInterval(this.state.intervalID);
     const player = event.target;
+
     this.setState({
       intervalID: setInterval(() => {
-        this.props.setCurrentTimeHandler(player.getCurrentTime());
+        this.props.getCurrentTimeHandler(player.getCurrentTime());
       }, 10)
     });
+
   };
   render() {
     const opts = {
@@ -45,7 +45,7 @@ class ReactYoutube extends React.Component {
         videoId={this.props.videoId}
         opts={opts}
         onReady={this.videoOnReady}
-        // onPlay={this.videoOnPlay}
+        // onPlay={this.setCurrentTime}
         // onPause={this.videoOnPause}
         onStateChange={this.videoOnStateChange}
       />
