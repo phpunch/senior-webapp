@@ -105,7 +105,7 @@ def process_wspecifier(wspecifier):
         out_wspecifier += parts[i] + ' '
     if parts[-1].startswith('ark,scp:'):
         ark, scp = parts[-1][8:].split(',')
-        out_wspecifier += 'ark,scp:%s.tmp.ark,%s.tmp.scp' % (ark, scp)
+        out_wspecifier += 'ark,scp:%s.tmp.ark,%s.tmp.scp' % (ark, scp) # convert ark -> tmp.ark
         return out_wspecifier, ark, scp
     if parts[-1].startswith('scp,ark:'):
         scp, ark = parts[-1][8:].split(',')
@@ -156,9 +156,10 @@ def eval_dnn(args):
                 text = text.replace('ark.tmp.ark', 'ark')
                 # Sometimes there is no \n at the end of file ank cause a Kaldi error.
                 # For preventing this error juts check the last char and append \n if not exist
+                logger.info("text : {}".format(text))
                 if text[-1] != '\n':
                     text += '\n'
-                print(text)
+                
                 fid_out.write(text)
         os.rename(scp + '.tmp', scp)
         # after create scp file  now we can delete temp file
