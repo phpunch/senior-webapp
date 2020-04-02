@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import ReactYoutube from "../../components/ReactYoutube";
 import axios from "axios";
 import queryString from "query-string";
@@ -12,7 +12,7 @@ import Card from "../../components/Card";
 import Chart from '../../components/Chart'
 import Slider from '../../components/Slider/Slider'
 
-class DemoYoutube extends Component {
+class DemoYoutube extends PureComponent {
   state = {
     currentTime: 0,
     youtube_url:
@@ -22,6 +22,7 @@ class DemoYoutube extends Component {
     politician_spk2idx: {},
     is_loading: false,
     is_saved: false,
+    url_lock: false,
     error_msg: null,
   };
 
@@ -46,7 +47,8 @@ class DemoYoutube extends Component {
 
   sendRequest = async () => {
     this.setState({
-      is_loading: true
+      is_loading: true,
+      url_lock: true
     });
     const query = this.state.youtube_url.split("?")[1];
     const urlParams = queryString.parse(query);
@@ -56,12 +58,12 @@ class DemoYoutube extends Component {
     };
     console.log(data);
     try {
-      const res = await axios.post("http://35.238.151.88:8000/youtube", data);
+      const res = await axios.post("http://34.71.245.189:8000/youtube", data);
       console.log(res.data.prediction);
       this.setState({
         prediction: [...res.data.prediction],
         videoId: urlParams.v,
-        is_loading: false
+        is_loading: false,
       });
     } catch (error) {
       console.log(error);
@@ -129,7 +131,7 @@ class DemoYoutube extends Component {
         "video_id": this.state.videoId,
         "label_list": this.state.prediction
       }
-      const res = await axios.post("http://35.238.151.88:8000/save", data)
+      const res = await axios.post("http://34.71.245.189:8000/save", data)
       console.log(res.data)
       this.setState({
         is_saved: true
@@ -145,6 +147,7 @@ class DemoYoutube extends Component {
     let chart = <Chart />
     let slider = <p></p>
     let youtube = <p></p>;
+    
     if (this.state.prediction && this.state.currentTime) {
       const idx = Math.floor(this.state.currentTime / 3);
       const label_id = parseInt(this.state.prediction[idx].label);
@@ -157,8 +160,6 @@ class DemoYoutube extends Component {
           key={`movingContactName:${this.state.politician_idx2spk[label_id]}`}
         />
       );
-
-
 
       let scores = this.state.prediction[idx].scores
       let chart_data = []
@@ -178,7 +179,6 @@ class DemoYoutube extends Component {
       chart = (
         <Chart data={chart_data} />
       )
-
 
       const slider_list = this.state.prediction.map(frame => {
         return {
@@ -234,14 +234,14 @@ class DemoYoutube extends Component {
                   label="Youtube URL"
                   value={this.state.youtube_url}
                   onChange={this.textInputHandler}
-                  disabled={this.state.is_loading} />
+                  disabled={this.state.url_lock} />
               </FormControl>
 
               <Button
                 variant="contained"
                 color="secondary"
                 onClick={this.sendRequest}
-                disabled={this.state.is_loading}
+                disabled={this.state.url_lock}
               >
                 Send!
               </Button>
@@ -253,15 +253,13 @@ class DemoYoutube extends Component {
             sm={12}
             xl={6}
             xs={12}
-            alignItems="center"
-            justify="center"
           >
             <Box borderRadius={16} bgcolor="background.paper" p={5}>
               {youtube}
             </Box>
 
           </Grid>
-          <Grid item lg={6} sm={12} xl={6} xs={12} alignItems="center">
+          <Grid item lg={6} sm={12} xl={6} xs={12}>
             <Box borderRadius={16} bgcolor="background.paper" p={5}>
               <Card text={`Current Time: ${this.state.currentTime}`} />
               <Card text={`Original Predict: ${old_label}`} />
@@ -271,12 +269,12 @@ class DemoYoutube extends Component {
 
             </Box>
           </Grid>
-          <Grid item lg={12} sm={12} xl={12} xs={12} alignItems="center">
+          <Grid item lg={12} sm={12} xl={12} xs={12}>
             <Box borderRadius={16} bgcolor="background.paper" p={5}>
               {slider}
             </Box>
           </Grid>
-          <Grid item lg={6} sm={12} xl={6} xs={12} alignItems="center">
+          <Grid item lg={6} sm={12} xl={6} xs={12}>
             <Box borderRadius={16} bgcolor="background.paper" p={5}>
               <Button
                 variant="contained"
@@ -285,18 +283,18 @@ class DemoYoutube extends Component {
               >
                 Save!
               </Button>
-              {this.state.is_saved ? "Yay" : ":("}
-              <Button
+              {this.state.is_saved ? "Saved!" : ":("}
+              {/* <Button
                 variant="contained"
                 color="primary"
                 onClick={this.printLabel}
               >
                 Print!
-              </Button>
+              </Button> */}
               {newLabel}
             </Box>
           </Grid>
-          <Grid item lg={6} sm={12} xl={6} xs={12} alignItems="center">
+          <Grid item lg={6} sm={12} xl={6} xs={12} >
             <Box borderRadius={16} bgcolor="background.paper" p={5}>
               {chart}
             </Box>

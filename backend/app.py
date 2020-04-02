@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 import falcon, json
 # from waitress import serve
 from falcon.http_status import HTTPStatus
@@ -9,6 +10,7 @@ import os
 import subprocess
 import os
 import pickle
+
 from pprint import pprint
 
 import predict
