@@ -1,4 +1,4 @@
-FROM project_3
+FROM phpunch/docker-project
 
 # --> Add everything in the current directory to our image, in the 'app' folder.
 RUN mkdir -p /kaldi/egs/sre16/senior-webapp/backend
