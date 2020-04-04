@@ -6,11 +6,22 @@ import queryString from "query-string";
 import Papa from "papaparse";
 import csv from "../Politician/politician_list.csv";
 
-import { Button, CircularProgress, Grid, Box, TextField, FormControl, Backdrop } from "@material-ui/core";
+import { Button, CircularProgress, Grid, Box, TextField, FormControl, Backdrop, Typography } from "@material-ui/core";
 import TextInput from "../../components/TextInput";
 import Card from "../../components/Card";
 import Chart from '../../components/Chart'
 import Slider from '../../components/Slider/Slider'
+
+function makeid(length) {
+  var result = '';
+  var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  var charactersLength = characters.length;
+  for (var i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
+
 
 class DemoYoutube extends PureComponent {
   state = {
@@ -54,7 +65,8 @@ class DemoYoutube extends PureComponent {
     const urlParams = queryString.parse(query);
     console.log(urlParams);
     const data = {
-      ...this.state
+      youtube_url: this.state.youtube_url,
+      ticket: makeid(5)
     };
     console.log(data);
     try {
@@ -127,17 +139,26 @@ class DemoYoutube extends PureComponent {
 
   saveLabel = async () => {
     try {
+      this.setState({
+        is_loading: true
+      })
       const data = {
-        "video_id": this.state.videoId,
-        "label_list": this.state.prediction
+        ticket: makeid(5),
+        youtube_url: this.state.youtube_url,
+        video_id: this.state.videoId,
+        label_list: this.state.prediction
       }
       const res = await axios.post("http://34.71.245.189:8000/save", data)
       console.log(res.data)
       this.setState({
+        is_loading: false,
         is_saved: true
       })
     } catch (error) {
       console.log(error)
+      this.setState({
+        error_msg: error.message
+      })
     }
   };
 
@@ -147,7 +168,7 @@ class DemoYoutube extends PureComponent {
     let chart = <Chart />
     let slider = <p></p>
     let youtube = <p></p>;
-    
+
     if (this.state.prediction && this.state.currentTime) {
       const idx = Math.floor(this.state.currentTime / 3);
       const label_id = parseInt(this.state.prediction[idx].label);
@@ -215,6 +236,11 @@ class DemoYoutube extends PureComponent {
           </div>
         );
       });
+    }
+
+    let loading_message = <CircularProgress color="primary" />
+    if (this.state.error_msg) {
+      loading_message = <p>{this.state.error_msg}</p>
     }
 
     return (
@@ -301,9 +327,16 @@ class DemoYoutube extends PureComponent {
           </Grid>
         </Grid>
         <Backdrop style={{ zIndex: 999, color: '#000000', }} open={this.state.is_loading}>
-          <Box borderRadius={16} bgcolor="background.paper" p={5}>
-            <p>ระบบกำลังประมวลผล</p>
-            {this.state.error_msg ? <p>{this.state.error_msg}</p> : <CircularProgress color="primary"/>}
+          <Box
+            borderRadius={16}
+            bgcolor="background.paper"
+            alignItems="center"
+            justifyContent="center"
+            p={5}>
+            <Typography variant="h5" >
+              เราจะทำตามสัญญา ขอเวลาอีกไม่นาน ...
+            </Typography>
+            {loading_message}
           </Box>
         </Backdrop>
       </div >

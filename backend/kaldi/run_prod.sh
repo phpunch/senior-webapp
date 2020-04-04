@@ -1,5 +1,5 @@
-# cd /media/punch/DriveE/linux/kaldi/egs/sre16/v13_parliament_v3
-
+cd $1
+echo $0 $1 $2 $3
 . ./path.sh
 . ./cmd.sh
 

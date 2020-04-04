@@ -11,7 +11,7 @@ import traceback
 
 # import mkl
 # import numexpr
-
+import time
 import kaldi_io
 #import ze_utils as utils
 from models import MyModel
@@ -144,7 +144,7 @@ def eval_dnn(args):
             model_path = os.path.join(model_dir, args.model_file)
             print("model_path", model_path)
             model.make_embedding(input_fid, output_fid, model_path, min_chunk_size, chunk_size, use_gpu, logger)
-
+    time.sleep(1)
     # rename output files
     if ark is not None:
         os.rename(ark + '.tmp.ark', ark)
@@ -152,9 +152,10 @@ def eval_dnn(args):
     if scp is not None:
         with open(scp + '.tmp.scp', 'rt') as fid_in:
             with open(scp + '.tmp', 'w') as fid_out:
+                fid_in.seek(0)
                 text = fid_in.read()
                 text = text.replace('ark.tmp.ark', 'ark')
-                # Sometimes there is no \n at the end of file ank cause a Kaldi error.
+                # Ssh: vim: command not foundometimes there is no \n at the end of file ank cause a Kaldi error.
                 # For preventing this error juts check the last char and append \n if not exist
                 logger.info("text : {}".format(text))
                 if text[-1] != '\n':

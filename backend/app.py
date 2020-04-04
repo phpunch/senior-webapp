@@ -1,4 +1,7 @@
 from __future__ import unicode_literals
+from gevent import monkey, pywsgi  # import the monkey for some patching as well as the WSGI server
+monkey.patch_all()  # make sure to do the monkey-patching before loading the falcon package!
+
 import falcon, json
 # from waitress import serve
 from falcon.http_status import HTTPStatus
@@ -10,6 +13,7 @@ import os
 import subprocess
 import os
 import pickle
+import shutil
 
 from pprint import pprint
 
@@ -99,17 +103,27 @@ class AudioStorage(object):
     def on_post_youtube(self, req, resp, data=None):
       print(data)
       try:
-        predict.clear_dir()
-        predict.check_exists()
-        predict.download_youtube(data["youtube_url"])
-        predict.audio_segmentation()
-        predict.write_wav_file()
-        prediction = predict.test()
-        with open("kaldi/prediction.pkl", "rb") as f:
-          prediction = pickle.load(f)
-          pprint(prediction)
+        # Create temp folder
+        random_string = data["ticket"]
+        folder_name = "kaldi_{}".format(random_string)
+        if (os.path.exists(folder_name)):
+          raise
+        shutil.copytree("kaldi", folder_name)
+
+        predict.clear_dir(folder_name)
+        predict.check_exists(folder_name)
+        predict.download_youtube(folder_name, data["youtube_url"])
+        predict.audio_segmentation(folder_name)
+        predict.write_wav_file(folder_name)
+        predict.test(folder_name)
+        predict.compute_result(folder_name)
+        prediction = predict.get_result(folder_name)
       except:
         raise Exception
+      finally:
+        if (os.path.exists(folder_name)):
+          shutil.rmtree(folder_name)
+
       output = {
           'method': 'post',
           'prediction': prediction
@@ -121,7 +135,24 @@ class AudioStorage(object):
     def on_post_save(self, req, resp, data=None):
       try:
         print(data)
-        save_label(data["video_id"], data["label_list"])
+        # Create temp folder
+        random_string = data["ticket"]
+        folder_name = "kaldi_{}".format(random_string)
+        if (os.path.exists(folder_name)):
+          raise
+        shutil.copytree("kaldi", folder_name)
+
+        predict.clear_dir(folder_name)
+        predict.check_exists(folder_name)
+        predict.download_youtube(folder_name, data["youtube_url"])
+        predict.audio_segmentation(folder_name)
+        predict.write_wav_file(folder_name)
+        predict.test(folder_name)
+        predict.compute_result(folder_name)
+        predict.get_result(folder_name)
+
+        # save label
+        save_label(folder_name, data["video_id"], data["label_list"])
       except:
         raise Exception
       output = {
@@ -138,4 +169,8 @@ app_api.add_route('/upload', AudioStorage(), suffix="upload")
 app_api.add_route('/youtube', AudioStorage(), suffix="youtube")
 app_api.add_route('/save', AudioStorage(), suffix="save")
 
+port = 8000
+print("listening")
+server = pywsgi.WSGIServer(("0.0.0.0", port), app_api)  # address and port to bind, and the Falcon handler API
+server.serve_forever()  # once the server is created, let it serve forever
 # serve(app, host="127.0.0.1", port=8000)

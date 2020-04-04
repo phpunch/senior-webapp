@@ -2,8 +2,8 @@ import os
 import pickle
 from collections import OrderedDict
 
-def add_silence_labels(prediction): # if no-label was not added, it might be an error at frontend!
-    audio_name = sorted([i[:-4] for i in os.listdir("../audios")])
+def add_silence_labels(folder_name, prediction): # if no-label was not added, it might be an error at frontend!
+    audio_name = sorted([i[:-4] for i in os.listdir("{}/audios".format(folder_name))])
     i = 0
     j = 0
     complete_prediction = []
@@ -30,8 +30,8 @@ def add_silence_labels(prediction): # if no-label was not added, it might be an 
 
 
 
-def find_best_plda():
-    score_path = "exp/scores/scores-prod-clean"
+def find_best_plda(folder_name):
+    score_path = "{}/exp/scores/scores-prod-clean".format(folder_name)
     with open(score_path) as f:
         lines = [line.strip() for line in f.readlines()]
 
@@ -72,9 +72,9 @@ def find_best_plda():
         })
 
     prediction = sorted(prediction, key=lambda x: x["filename"])
-    prediction = add_silence_labels(prediction)
+    prediction = add_silence_labels(folder_name, prediction)
 
-    with open("prediction.pkl", "wb") as f:
+    with open("{}/prediction.pkl".format(folder_name), "wb") as f:
         pickle.dump(prediction, f)
 
 if __name__=="__main__":

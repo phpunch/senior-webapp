@@ -8,7 +8,7 @@ from pprint import pprint
 #     'label': 181
 # }]
 
-def save_label(video_id, label_list):
+def save_label(folder_name, video_id, label_list):
 
     counter = defaultdict(int)
 
@@ -20,17 +20,17 @@ def save_label(video_id, label_list):
         str_label = "{:03d}".format(int(obj["label"]))
         
         old_name = "{}.wav".format(obj["filename"]) # demo-000001.wav
-        new_name = "{}-{}-{:06d}.wav".format(str_label, video_id, counter[str_label])
+        new_name = "{}-{}-{:06d}.wav".format(str_label, video_id, counter[str_label]) # 556-FGdf544-000001.wav
         
-        src_path = os.path.join("audios", old_name)
+        src_path = os.path.join("{}/audios".format(folder_name), old_name)
         dst_path = os.path.join("database", str_label, new_name)
-        print(src_path, dst_path)
+        
 
         folder_path = os.path.join("database", str_label)
         if (not os.path.exists(folder_path)):
             os.mkdir(folder_path)
         shutil.copy2(src_path, dst_path)
-
+        print("Change filename from {} >> {}".format(src_path, dst_path))
         counter[str_label] += 1
 
 def add_to_storage(storage_path):
