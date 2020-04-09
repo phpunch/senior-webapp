@@ -11,6 +11,7 @@ import TextInput from "../../components/TextInput";
 import Card from "../../components/Card";
 import Chart from '../../components/Chart'
 import Slider from '../../components/Slider/Slider'
+import HorizontalTable from '../../components/HorizontalTable'
 
 function makeid(length) {
   var result = '';
@@ -22,6 +23,7 @@ function makeid(length) {
   return result;
 }
 
+const host = 'localhost'
 
 class DemoYoutube extends PureComponent {
   state = {
@@ -70,7 +72,7 @@ class DemoYoutube extends PureComponent {
     };
     console.log(data);
     try {
-      const res = await axios.post("http://34.71.245.189:8000/youtube", data);
+      const res = await axios.post(`http://${host}:8000/youtube`, data);
       console.log(res.data.prediction);
       this.setState({
         prediction: [...res.data.prediction],
@@ -148,7 +150,7 @@ class DemoYoutube extends PureComponent {
         video_id: this.state.videoId,
         label_list: this.state.prediction
       }
-      const res = await axios.post("http://34.71.245.189:8000/save", data)
+      const res = await axios.post(`http://${host}:8000/save`, data)
       console.log(res.data)
       this.setState({
         is_loading: false,
@@ -168,6 +170,7 @@ class DemoYoutube extends PureComponent {
     let chart = <Chart />
     let slider = <p></p>
     let youtube = <p></p>;
+    let horizontal_table = "";
 
     if (this.state.prediction && this.state.currentTime) {
       const idx = Math.floor(this.state.currentTime / 3);
@@ -201,9 +204,10 @@ class DemoYoutube extends PureComponent {
         <Chart data={chart_data} />
       )
 
-      const slider_list = this.state.prediction.map(frame => {
+      const slider_list = this.state.prediction.map((frame, index) => {
         return {
           'filename': frame.filename,
+          'time': "วินาที : " + (index * 3).toString(), 
           'name': this.state.politician_idx2spk[parseInt(frame.label)]
         }
       })
@@ -212,6 +216,49 @@ class DemoYoutube extends PureComponent {
         list={slider_list}
         selected={this.state.prediction[idx].filename}
       />
+      
+      const min_bound = Math.max(0, idx - 2)
+      const max_bound = Math.min(this.state.prediction.length - 1, idx + 2)
+      // console.log(min_bound, max_bound)
+      let horizontal_table_list = [];
+      let count = 0
+      if (parseInt(idx) < 1) {
+        horizontal_table_list.unshift({})
+      }
+      if (parseInt(idx) < 2) {
+        horizontal_table_list.unshift({})
+      }
+      // let index = 0
+      // while (index < slider_list.length) {
+      //   console.log(min_bound, index, max_bound)
+      //   if (count < 2 && check < 2) {
+      //     console.log("YES")
+      //     horizontal_table_list.push({})
+      //     count++;
+      //   }
+      //   else if (min_bound <= index && index <= max_bound) {
+          
+      //     horizontal_table_list.push(slider_list[index])
+      //     count++;
+      //     index++;
+      //   }
+      //   if (count === 5) {
+      //     break
+      //   }
+
+      // }
+
+
+      for (const index in slider_list) {
+        
+        if (min_bound <= parseInt(index) && parseInt(index) <= max_bound) {
+          console.log(min_bound, parseInt(index), max_bound)
+          horizontal_table_list.push(slider_list[index])
+        }
+      }
+      console.log(horizontal_table_list)
+      horizontal_table = <HorizontalTable rows={horizontal_table_list}/>
+
     }
     if (this.state.prediction) {
       youtube = (
@@ -297,7 +344,8 @@ class DemoYoutube extends PureComponent {
           </Grid>
           <Grid item lg={12} sm={12} xl={12} xs={12}>
             <Box borderRadius={16} bgcolor="background.paper" p={5}>
-              {slider}
+              {/* {slider} */}
+              {horizontal_table}
             </Box>
           </Grid>
           <Grid item lg={6} sm={12} xl={6} xs={12}>

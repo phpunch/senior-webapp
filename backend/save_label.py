@@ -3,6 +3,7 @@ import glob
 from collections import defaultdict
 import shutil
 from pprint import pprint
+import pickle
 # label_list = [{
 #     'filename': 'demo-000001',
 #     'label': 181
@@ -32,6 +33,14 @@ def save_label(folder_name, video_id, label_list):
         shutil.copy2(src_path, dst_path)
         print("Change filename from {} >> {}".format(src_path, dst_path))
         counter[str_label] += 1
+        
+    label_log = {
+        "video_id": video_id,
+        "label_list": label_list
+    }
+    with open("label_logs/{}.pkl".format(video_id), "wb") as f:
+        pickle.dump(label_log, f)
+
 
 def add_to_storage(storage_path):
     file_path_list = glob.glob("database/*/*")

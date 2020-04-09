@@ -25,9 +25,9 @@ echo "Extract Vector"
 
 
 vector_train_dir=$nnet_dir/pvector_train_combined
-vector_adapt_dir=$nnet_dir/pvector_adapt
+vector_adapt_dir=$nnet_dir/pvector_adapt_parliament
 vector_prod_dir=$nnet_dir/pvector_prod
-vector_dev_dir=$nnet_dir/pvector_dev
+vector_dev_dir=$nnet_dir/pvector_dev_parliament
 
 echo "Create Trial"
 bash ./create_trial.sh $vector_dev_dir/spk_xvector.scp $vector_prod_dir/xvector.scp exp/trial_prod || exit 1;
@@ -39,8 +39,3 @@ $train_cmd exp/scores/log/prod-clean-scoring.log \
    "ark:ivector-subtract-global-mean $vector_adapt_dir/mean.vec scp:$vector_dev_dir/spk_xvector.scp ark:- | transform-vec $vector_train_dir/transform.mat ark:- ark:- | ivector-normalize-length ark:- ark:- |" \
    "ark:ivector-subtract-global-mean $vector_adapt_dir/mean.vec scp:$vector_prod_dir/xvector.scp ark:- | transform-vec $vector_train_dir/transform.mat ark:- ark:- | ivector-normalize-length ark:- ark:- |" \
    "cat 'exp/trial_prod' | cut -d\  --fields=1,2 |" exp/scores/scores-prod-clean || exit 1;
-
-# echo "Find best PLDA"
-# bash ./find_best_plda.sh exp/scores/scores-prod-clean exp/result_prod.txt
-
-# echo "Done"

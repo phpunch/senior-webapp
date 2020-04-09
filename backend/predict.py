@@ -98,6 +98,8 @@ def test(folder_name):
     # os.chdir("..")
     
   except subprocess.CalledProcessError as exc:
+    with open('{}/exp/pvector_net/pvector_prod/log/extract.log'.format(folder_name)) as f:
+      print(f.read())
     print("Status : FAIL", exc.returncode, exc.output)
     print("CallProcessError")
     raise

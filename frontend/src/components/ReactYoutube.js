@@ -23,10 +23,11 @@ class ReactYoutube extends React.Component {
     clearInterval(this.state.intervalID);
     const player = event.target;
 
+    this.props.getCurrentTimeHandler(player.getCurrentTime())
     this.setState({
       intervalID: setInterval(() => {
         this.props.getCurrentTimeHandler(player.getCurrentTime());
-      }, 10)
+      }, 1000)
     });
 
   };

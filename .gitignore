@@ -26,5 +26,5 @@ backend/*.wav
 backend/audios
 backend/__pycache__
 backend/kaldi/__pycache__
-backend/kaldi/exp/pvector_net
+# backend/kaldi/exp/pvector_net
 backend/database

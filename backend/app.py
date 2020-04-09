@@ -155,6 +155,9 @@ class AudioStorage(object):
         save_label(folder_name, data["video_id"], data["label_list"])
       except:
         raise Exception
+      finally:
+        if (os.path.exists(folder_name)):
+          shutil.rmtree(folder_name)
       output = {
           'method': 'post',
           'success': 1
