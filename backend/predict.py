@@ -7,7 +7,7 @@ import glob
 import shutil
 import pickle
 from pprint import pprint
-from find_best_plda import find_best_plda
+from find_best_plda import find_best_plda, post_process, save_prediction
 
 class YoutubeExistError(Exception): pass
 class AudiosExistError(Exception): pass
@@ -113,7 +113,9 @@ def test(folder_name):
     raise
 
 def compute_result(folder_name):
-  find_best_plda(folder_name)
+  prediction = find_best_plda(folder_name)
+  post_prediction = post_process(prediction)
+  save_prediction(post_prediction, folder_name)
 
 def get_result(folder_name):
   with open("{}/prediction.pkl".format(folder_name), "rb") as f:
