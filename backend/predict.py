@@ -12,6 +12,7 @@ from find_best_plda import find_best_plda
 class YoutubeExistError(Exception): pass
 class AudiosExistError(Exception): pass
 class WriteWavError(Exception): pass
+class AudiosDisappearError(Exception): pass
 
 def clear_dir(folder_name):
   if (os.path.exists("{}/demo.wav".format(folder_name))):
@@ -48,7 +49,7 @@ def audio_segmentation(folder_name):
     os.mkdir("{}/audios".format(folder_name))
   # Audio Segmentation 
   duration = 3 # (3 second per file)
-  cmd_string = 'ffmpeg -i {0}/demo.wav -f segment -segment_time {1} -ac 1 {0}/audios/demo-%06d.wav'.format(folder_name, duration)
+  cmd_string = 'ffmpeg -i {0}/demo.wav -f segment -segment_time {1} -ar 16000 -ac 1 {0}/audios/demo-%06d.wav'.format(folder_name, duration)
   try:
     subprocess.check_call(cmd_string, shell=True)
   except subprocess.CalledProcessError as exc:
@@ -69,33 +70,33 @@ def write_wav_file(folder_name):
           abs_path = os.path.abspath(path)
           # print("{0} {1}\n".format(name, abs_path))
           f.write("{0} {1}\n".format(name, abs_path))
-def test(folder_name):
-  try:
-    # change working directory to kaldi because of path.sh problem
-    # os.chdir(folder_name)
-    # run.sh
 
-    command = "./{0}/run_prod.sh {0}".format(folder_name)
+import kaldi_io
+
+def tune_loudness(folder_name):
+  try:
+    command = "./{0}/run_vad.sh {0}".format(folder_name)
     subprocess.check_call(command, shell=True)
 
-    
-    # command = "sort exp/result_prod.txt > exp/result_sorted.txt"
-    # subprocess.check_call(command, shell=True)
+    vec = {k: v.astype(int) for k,v in kaldi_io.read_vec_flt_ark("{}/mfcc/vad.ark".format(folder_name))}
+    # print(vec)
+    for filename in vec.keys():
+      file_path = os.path.join(folder_name, 'audios', '{}.wav'.format(filename))
+      sound = AudioSegment.from_file(file_path)
 
-    # # read the result
-    # with open("exp/result_sorted.txt") as f:
-    #   prediction = []
-    #   prediction_list = [row.strip() for row in f.readlines()]
-    #   for row in prediction_list:
-    #       name, _, _, _, _, label, score = row.split(" ")
-    #       print(name, label, score)
-    #       prediction.append({
-    #           "name": name,
-    #           "label": label,
-    #           "score": score
-    #       })
-    
-    # os.chdir("..")
+      target_dBFS = -30
+      change_in_dBFS = target_dBFS - sound.dBFS
+      modified_sound = sound.apply_gain(change_in_dBFS)
+      modified_sound.export(file_path, format="wav")
+  except subprocess.CalledProcessError as exc:
+    print("Status : FAIL", exc.returncode, exc.output)
+    print("CallProcessError")
+    raise
+
+def test(folder_name):
+  try:
+    command = "./{0}/run_prod.sh {0}".format(folder_name)
+    subprocess.check_call(command, shell=True)
     
   except subprocess.CalledProcessError as exc:
     with open('{}/exp/pvector_net/pvector_prod/log/extract.log'.format(folder_name)) as f:
@@ -122,16 +123,19 @@ def get_result(folder_name):
     
 if __name__ == "__main__":
   # Create temp folder
-  random_string = "55DDD"
+  random_string = "AAAAA"
   folder_name = "kaldi_{}".format(random_string)
   shutil.copytree("kaldi", folder_name)
 
   clear_dir(folder_name)
   check_exists(folder_name)
-  download_youtube(folder_name, "https://www.youtube.com/watch?v=kHk5muJUwuw")
+  # download_youtube(folder_name, "https://www.youtube.com/watch?v=kHk5muJUwuw")
+  download_youtube(folder_name, "https://www.youtube.com/watch?v=TmZDlDTK03w")
   audio_segmentation(folder_name)
   write_wav_file(folder_name)
+  tune_loudness(folder_name)
   test(folder_name)
   compute_result(folder_name)
   get_result(folder_name)
+
   
