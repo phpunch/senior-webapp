@@ -115,7 +115,7 @@ class AudioStorage(object):
         predict.download_youtube(folder_name, data["youtube_url"])
         predict.audio_segmentation(folder_name)
         predict.write_wav_file(folder_name)
-        predict.tune_loudness(folder_name)
+        # predict.tune_loudness(folder_name)
         predict.test(folder_name)
         predict.compute_result(folder_name)
         prediction = predict.get_result(folder_name)

@@ -23,7 +23,7 @@ function makeid(length) {
   return result;
 }
 
-const host = 'localhost'
+const host = '34.71.245.189'
 
 class DemoYoutube extends PureComponent {
   state = {

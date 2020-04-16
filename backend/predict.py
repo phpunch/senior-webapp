@@ -71,27 +71,27 @@ def write_wav_file(folder_name):
           # print("{0} {1}\n".format(name, abs_path))
           f.write("{0} {1}\n".format(name, abs_path))
 
-import kaldi_io
+# import kaldi_io
 
-def tune_loudness(folder_name):
-  try:
-    command = "./{0}/run_vad.sh {0}".format(folder_name)
-    subprocess.check_call(command, shell=True)
+# def tune_loudness(folder_name):
+#   try:
+#     command = "./{0}/run_vad.sh {0}".format(folder_name)
+#     subprocess.check_call(command, shell=True)
 
-    vec = {k: v.astype(int) for k,v in kaldi_io.read_vec_flt_ark("{}/mfcc/vad.ark".format(folder_name))}
-    # print(vec)
-    for filename in vec.keys():
-      file_path = os.path.join(folder_name, 'audios', '{}.wav'.format(filename))
-      sound = AudioSegment.from_file(file_path)
+#     vec = {k: v.astype(int) for k,v in kaldi_io.read_vec_flt_ark("{}/mfcc/vad.ark".format(folder_name))}
+#     # print(vec)
+#     for filename in vec.keys():
+#       file_path = os.path.join(folder_name, 'audios', '{}.wav'.format(filename))
+#       sound = AudioSegment.from_file(file_path)
 
-      target_dBFS = -30
-      change_in_dBFS = target_dBFS - sound.dBFS
-      modified_sound = sound.apply_gain(change_in_dBFS)
-      modified_sound.export(file_path, format="wav")
-  except subprocess.CalledProcessError as exc:
-    print("Status : FAIL", exc.returncode, exc.output)
-    print("CallProcessError")
-    raise
+#       target_dBFS = -30
+#       change_in_dBFS = target_dBFS - sound.dBFS
+#       modified_sound = sound.apply_gain(change_in_dBFS)
+#       modified_sound.export(file_path, format="wav")
+#   except subprocess.CalledProcessError as exc:
+#     print("Status : FAIL", exc.returncode, exc.output)
+#     print("CallProcessError")
+#     raise
 
 def test(folder_name):
   try:
