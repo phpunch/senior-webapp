@@ -40,7 +40,7 @@ def find_best_plda(folder_name):
     def find_top_scorer(lst):
         # print(len(lst))
         lst.sort(key=lambda x: x[1], reverse=True)
-        return lst[:5]
+        return lst[:20]
 
     current_audio_name = "demo-000000"
     max_score = -999
@@ -122,7 +122,7 @@ def post_process(prediction):
             "label": scores[0][0],
             "scores": scores
         })
-    pprint(new_prediction)
+    # pprint(new_prediction)
     # raise Exception
     return new_prediction
 

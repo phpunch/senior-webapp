@@ -114,8 +114,8 @@ def test(folder_name):
 
 def compute_result(folder_name):
   prediction = find_best_plda(folder_name)
-  post_prediction = post_process(prediction)
-  save_prediction(post_prediction, folder_name)
+  prediction = post_process(prediction)
+  save_prediction(prediction, folder_name)
 
 def get_result(folder_name):
   with open("{}/prediction.pkl".format(folder_name), "rb") as f:
@@ -135,7 +135,7 @@ if __name__ == "__main__":
   download_youtube(folder_name, "https://www.youtube.com/watch?v=TmZDlDTK03w")
   audio_segmentation(folder_name)
   write_wav_file(folder_name)
-  tune_loudness(folder_name)
+  # tune_loudness(folder_name)
   test(folder_name)
   compute_result(folder_name)
   get_result(folder_name)
