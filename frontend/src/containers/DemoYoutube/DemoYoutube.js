@@ -68,6 +68,7 @@ class DemoYoutube extends PureComponent {
     console.log(urlParams);
     const data = {
       youtube_url: this.state.youtube_url,
+      video_id: urlParams.v,
       ticket: makeid(5)
     };
     console.log(data);
