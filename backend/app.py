@@ -117,7 +117,7 @@ class AudioStorage(object):
         predict.write_wav_file(folder_name)
         predict.tune_loudness(folder_name)
         predict.test(folder_name)
-        predict.compute_result(folder_name)
+        predict.compute_result(folder_name, data["video_id"])
         prediction = predict.get_result(folder_name)
       except:
         raise Exception

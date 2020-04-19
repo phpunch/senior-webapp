@@ -17,6 +17,13 @@ def save_label(folder_name, video_id, label_list):
         if (obj["label"] == ""): 
             print("{} : no label".format(obj["filename"]))
             continue
+        str_label = "{:03d}".format(int(obj["label"]))
+        obj["label"] = str_label
+
+    for obj in label_list:
+        if (obj["label"] == ""): 
+            print("{} : no label".format(obj["filename"]))
+            continue
 
         str_label = "{:03d}".format(int(obj["label"]))
         

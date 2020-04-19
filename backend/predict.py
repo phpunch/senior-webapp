@@ -7,9 +7,8 @@ import glob
 import shutil
 import pickle
 from pprint import pprint
-from find_best_plda import find_best_plda
+from find_best_plda import find_best_plda, post_process, save_prediction
 import kaldi_io
-
 
 class YoutubeExistError(Exception): pass
 class AudiosExistError(Exception): pass
@@ -74,7 +73,6 @@ def write_wav_file(folder_name):
           f.write("{0} {1}\n".format(name, abs_path))
 
 
-
 def tune_loudness(folder_name):
   try:
     command = "./{0}/run_vad.sh {0}".format(folder_name)
@@ -114,8 +112,10 @@ def test(folder_name):
     print("FileNotFoundError")
     raise
 
-def compute_result(folder_name):
-  find_best_plda(folder_name)
+def compute_result(folder_name, video_id):
+  prediction = find_best_plda(folder_name)
+  prediction = post_process(prediction)
+  save_prediction(prediction, folder_name, video_id)
 
 def get_result(folder_name):
   with open("{}/prediction.pkl".format(folder_name), "rb") as f:
@@ -135,9 +135,9 @@ if __name__ == "__main__":
   # download_youtube(folder_name, "https://www.youtube.com/watch?v=TmZDlDTK03w")
   audio_segmentation(folder_name)
   write_wav_file(folder_name)
-  tune_loudness(folder_name)
+  # tune_loudness(folder_name)
   test(folder_name)
-  compute_result(folder_name)
+  compute_result(folder_name, kHk5muJUwuw)
   get_result(folder_name)
 
   
