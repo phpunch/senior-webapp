@@ -8,6 +8,8 @@ import shutil
 import pickle
 from pprint import pprint
 from find_best_plda import find_best_plda
+import kaldi_io
+
 
 class YoutubeExistError(Exception): pass
 class AudiosExistError(Exception): pass
@@ -71,7 +73,7 @@ def write_wav_file(folder_name):
           # print("{0} {1}\n".format(name, abs_path))
           f.write("{0} {1}\n".format(name, abs_path))
 
-import kaldi_io
+
 
 def tune_loudness(folder_name):
   try:
@@ -84,7 +86,7 @@ def tune_loudness(folder_name):
       file_path = os.path.join(folder_name, 'audios', '{}.wav'.format(filename))
       sound = AudioSegment.from_file(file_path)
 
-      target_dBFS = -30
+      target_dBFS = -10
       change_in_dBFS = target_dBFS - sound.dBFS
       modified_sound = sound.apply_gain(change_in_dBFS)
       modified_sound.export(file_path, format="wav")
@@ -129,8 +131,8 @@ if __name__ == "__main__":
 
   clear_dir(folder_name)
   check_exists(folder_name)
-  # download_youtube(folder_name, "https://www.youtube.com/watch?v=kHk5muJUwuw")
-  download_youtube(folder_name, "https://www.youtube.com/watch?v=TmZDlDTK03w")
+  download_youtube(folder_name, "https://www.youtube.com/watch?v=kHk5muJUwuw")
+  # download_youtube(folder_name, "https://www.youtube.com/watch?v=TmZDlDTK03w")
   audio_segmentation(folder_name)
   write_wav_file(folder_name)
   tune_loudness(folder_name)

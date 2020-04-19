@@ -1,0 +1,528 @@
+# local/tf/extract_embedding.py --use-gpu=no --min-chunk-size=25 --chunk-size=400 "--feature-rspecifier=apply-cmvn-sliding --norm-vars=false --center=true --cmn-window=300 scp:data/feats.scp ark:- | select-voiced-frames ark:- scp:data/vad.scp ark:- |" "--vector-wspecifier=| copy-vector ark:- ark,scp:exp/pvector_net/pvector_prod//xvector.ark,exp/pvector_net/pvector_prod//xvector.scp" --model-dir=exp/pvector_net/models --model-file=vector_weights_4.hdf5 
+# Started at Sun Apr 19 06:55:10 UTC 2020
+#
+/home/punchproject666/anaconda3/envs/backend/lib/python3.7/site-packages/tensorflow/python/framework/dtypes.py:516: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_qint8 = np.dtype([("qint8", np.int8, 1)])
+/home/punchproject666/anaconda3/envs/backend/lib/python3.7/site-packages/tensorflow/python/framework/dtypes.py:517: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_quint8 = np.dtype([("quint8", np.uint8, 1)])
+/home/punchproject666/anaconda3/envs/backend/lib/python3.7/site-packages/tensorflow/python/framework/dtypes.py:518: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_qint16 = np.dtype([("qint16", np.int16, 1)])
+/home/punchproject666/anaconda3/envs/backend/lib/python3.7/site-packages/tensorflow/python/framework/dtypes.py:519: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_quint16 = np.dtype([("quint16", np.uint16, 1)])
+/home/punchproject666/anaconda3/envs/backend/lib/python3.7/site-packages/tensorflow/python/framework/dtypes.py:520: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_qint32 = np.dtype([("qint32", np.int32, 1)])
+/home/punchproject666/anaconda3/envs/backend/lib/python3.7/site-packages/tensorflow/python/framework/dtypes.py:525: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  np_resource = np.dtype([("resource", np.ubyte, 1)])
+/home/punchproject666/anaconda3/envs/backend/lib/python3.7/site-packages/tensorboard/compat/tensorflow_stub/dtypes.py:541: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_qint8 = np.dtype([("qint8", np.int8, 1)])
+/home/punchproject666/anaconda3/envs/backend/lib/python3.7/site-packages/tensorboard/compat/tensorflow_stub/dtypes.py:542: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_quint8 = np.dtype([("quint8", np.uint8, 1)])
+/home/punchproject666/anaconda3/envs/backend/lib/python3.7/site-packages/tensorboard/compat/tensorflow_stub/dtypes.py:543: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_qint16 = np.dtype([("qint16", np.int16, 1)])
+/home/punchproject666/anaconda3/envs/backend/lib/python3.7/site-packages/tensorboard/compat/tensorflow_stub/dtypes.py:544: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_quint16 = np.dtype([("quint16", np.uint16, 1)])
+/home/punchproject666/anaconda3/envs/backend/lib/python3.7/site-packages/tensorboard/compat/tensorflow_stub/dtypes.py:545: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_qint32 = np.dtype([("qint32", np.int32, 1)])
+/home/punchproject666/anaconda3/envs/backend/lib/python3.7/site-packages/tensorboard/compat/tensorflow_stub/dtypes.py:550: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  np_resource = np.dtype([("resource", np.ubyte, 1)])
+WARNING:tensorflow:From /home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:17: The name tf.keras.initializers.TruncatedNormal is deprecated. Please use tf.compat.v1.keras.initializers.TruncatedNormal instead.
+
+2020-04-19 06:55:12,347 [local/tf/extract_embedding.py:38 - <module> - INFO ] Start running on host: web-app
+2020-04-19 06:55:12,347 [local/tf/extract_embedding.py:39 - <module> - INFO ] Extract embeddings from features (extract_embedding.py)
+2020-04-19 06:55:12.363639: I tensorflow/core/platform/cpu_feature_guard.cc:145] This TensorFlow binary is optimized with Intel(R) MKL-DNN to use the following CPU instructions in performance critical operations:  SSE4.1 SSE4.2 AVX AVX2 FMA
+To enable them in non-MKL-DNN operations, rebuild TensorFlow with the appropriate compiler flags.
+2020-04-19 06:55:12.371507: I tensorflow/core/platform/profile_utils/cpu_utils.cc:94] CPU Frequency: 2300000000 Hz
+2020-04-19 06:55:12.372133: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x564ca3050100 executing computations on platform Host. Devices:
+2020-04-19 06:55:12.372186: I tensorflow/compiler/xla/service/service.cc:175]   StreamExecutor device (0): <undefined>, <undefined>
+OMP: Info #154: KMP_AFFINITY: Initial OS proc set respected: 0-5
+OMP: Info #213: KMP_AFFINITY: decoding x2APIC ids.
+OMP: Info #276: KMP_AFFINITY: Affinity capable, using global cpuid leaf 11 info
+OMP: Info #156: KMP_AFFINITY: 6 available OS procs
+OMP: Info #157: KMP_AFFINITY: Uniform topology
+OMP: Info #191: KMP_AFFINITY: 1 socket x 3 cores/socket x 2 threads/core (3 total cores)
+OMP: Info #215: KMP_AFFINITY: OS proc to physical thread map:
+OMP: Info #171: KMP_AFFINITY: OS proc 0 maps to socket 0 core 0 thread 0 
+OMP: Info #171: KMP_AFFINITY: OS proc 3 maps to socket 0 core 0 thread 1 
+OMP: Info #171: KMP_AFFINITY: OS proc 1 maps to socket 0 core 1 thread 0 
+OMP: Info #171: KMP_AFFINITY: OS proc 4 maps to socket 0 core 1 thread 1 
+OMP: Info #171: KMP_AFFINITY: OS proc 2 maps to socket 0 core 2 thread 0 
+OMP: Info #171: KMP_AFFINITY: OS proc 5 maps to socket 0 core 2 thread 1 
+OMP: Info #251: KMP_AFFINITY: pid 7506 tid 7506 thread 0 bound to OS proc set 0
+2020-04-19 06:55:12.373074: I tensorflow/core/common_runtime/process_util.cc:115] Creating new thread pool with default inter op setting: 2. Tune using inter_op_parallelism_threads for best performance.
+WARNING:tensorflow:From /home/punchproject666/anaconda3/envs/backend/lib/python3.7/site-packages/tensorflow/python/keras/initializers.py:94: calling TruncatedNormal.__init__ (from tensorflow.python.ops.init_ops) with dtype is deprecated and will be removed in a future version.
+Instructions for updating:
+Call initializer instance with the dtype argument instead of passing it to the constructor
+select-voiced-frames ark:- scp:data/vad.scp ark:- 
+apply-cmvn-sliding --norm-vars=false --center=true --cmn-window=300 scp:data/feats.scp ark:- 
+copy-vector ark:- ark,scp:exp/pvector_net/pvector_prod//xvector.ark.tmp.ark,exp/pvector_net/pvector_prod//xvector.scp.tmp.scp 
+2020-04-19 06:55:12.974859: W tensorflow/compiler/jit/mark_for_compilation_pass.cc:1412] (One-time warning): Not using XLA:CPU for cluster because envvar TF_XLA_FLAGS=--tf_xla_cpu_global_jit was not set.  If you want XLA:CPU, either set that envvar, or use experimental_jit_scope to enable XLA:CPU.  To confirm that XLA is active, pass --vmodule=xla_compilation_cache=1 (as a proper command-line flag, not via TF_XLA_FLAGS) or set the envvar XLA_FLAGS=--xla_hlo_profile.
+2020-04-19 06:55:13,254 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000000' which have shape '(293, 23)'
+2020-04-19 06:55:13,254 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000000, using chunk size of 293
+2020-04-19 06:55:13,254 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:13,254 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 293
+OMP: Info #251: KMP_AFFINITY: pid 7506 tid 7535 thread 1 bound to OS proc set 1
+OMP: Info #251: KMP_AFFINITY: pid 7506 tid 7543 thread 2 bound to OS proc set 2
+OMP: Info #251: KMP_AFFINITY: pid 7506 tid 7544 thread 3 bound to OS proc set 3
+OMP: Info #251: KMP_AFFINITY: pid 7506 tid 7545 thread 4 bound to OS proc set 4
+OMP: Info #251: KMP_AFFINITY: pid 7506 tid 7546 thread 5 bound to OS proc set 5
+OMP: Info #251: KMP_AFFINITY: pid 7506 tid 7547 thread 6 bound to OS proc set 0
+2020-04-19 06:55:13,648 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000001' which have shape '(268, 23)'
+2020-04-19 06:55:13,649 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000001, using chunk size of 268
+2020-04-19 06:55:13,649 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:13,649 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 268
+2020-04-19 06:55:13,673 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000002' which have shape '(281, 23)'
+2020-04-19 06:55:13,674 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000002, using chunk size of 281
+2020-04-19 06:55:13,674 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:13,674 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 281
+OMP: Info #251: KMP_AFFINITY: pid 7506 tid 7534 thread 7 bound to OS proc set 1
+OMP: Info #251: KMP_AFFINITY: pid 7506 tid 7548 thread 8 bound to OS proc set 2
+OMP: Info #251: KMP_AFFINITY: pid 7506 tid 7549 thread 9 bound to OS proc set 3
+OMP: Info #251: KMP_AFFINITY: pid 7506 tid 7550 thread 10 bound to OS proc set 4
+OMP: Info #251: KMP_AFFINITY: pid 7506 tid 7551 thread 11 bound to OS proc set 5
+OMP: Info #251: KMP_AFFINITY: pid 7506 tid 7552 thread 12 bound to OS proc set 0
+2020-04-19 06:55:13,701 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000003' which have shape '(300, 23)'
+2020-04-19 06:55:13,701 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000003, using chunk size of 300
+2020-04-19 06:55:13,701 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:13,701 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:13,729 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000004' which have shape '(272, 23)'
+2020-04-19 06:55:13,730 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000004, using chunk size of 272
+2020-04-19 06:55:13,730 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:13,730 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 272
+2020-04-19 06:55:13,757 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000005' which have shape '(284, 23)'
+2020-04-19 06:55:13,757 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000005, using chunk size of 284
+2020-04-19 06:55:13,757 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:13,757 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 284
+2020-04-19 06:55:13,785 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000006' which have shape '(285, 23)'
+2020-04-19 06:55:13,785 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000006, using chunk size of 285
+2020-04-19 06:55:13,786 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:13,786 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 285
+2020-04-19 06:55:13,814 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000007' which have shape '(300, 23)'
+2020-04-19 06:55:13,814 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000007, using chunk size of 300
+2020-04-19 06:55:13,814 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:13,814 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:13,841 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000008' which have shape '(261, 23)'
+2020-04-19 06:55:13,841 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000008, using chunk size of 261
+2020-04-19 06:55:13,842 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:13,842 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 261
+2020-04-19 06:55:13,869 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000009' which have shape '(300, 23)'
+2020-04-19 06:55:13,869 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000009, using chunk size of 300
+2020-04-19 06:55:13,869 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:13,869 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:13,896 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000010' which have shape '(272, 23)'
+2020-04-19 06:55:13,898 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000010, using chunk size of 272
+2020-04-19 06:55:13,898 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:13,898 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 272
+2020-04-19 06:55:13,923 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000011' which have shape '(280, 23)'
+2020-04-19 06:55:13,924 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000011, using chunk size of 280
+2020-04-19 06:55:13,924 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:13,924 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 280
+2020-04-19 06:55:13,952 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000012' which have shape '(300, 23)'
+2020-04-19 06:55:13,952 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000012, using chunk size of 300
+2020-04-19 06:55:13,953 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:13,953 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:13,980 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000013' which have shape '(295, 23)'
+2020-04-19 06:55:13,980 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000013, using chunk size of 295
+2020-04-19 06:55:13,980 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:13,980 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 295
+2020-04-19 06:55:14,010 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000014' which have shape '(299, 23)'
+2020-04-19 06:55:14,010 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000014, using chunk size of 299
+2020-04-19 06:55:14,010 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:14,010 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 299
+2020-04-19 06:55:14,041 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000015' which have shape '(300, 23)'
+2020-04-19 06:55:14,041 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000015, using chunk size of 300
+2020-04-19 06:55:14,041 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:14,041 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:14,069 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000016' which have shape '(300, 23)'
+2020-04-19 06:55:14,069 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000016, using chunk size of 300
+2020-04-19 06:55:14,069 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:14,069 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:14,097 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000017' which have shape '(300, 23)'
+2020-04-19 06:55:14,097 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000017, using chunk size of 300
+2020-04-19 06:55:14,097 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:14,097 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:14,125 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000018' which have shape '(300, 23)'
+2020-04-19 06:55:14,125 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000018, using chunk size of 300
+2020-04-19 06:55:14,125 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:14,125 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:14,152 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000019' which have shape '(283, 23)'
+2020-04-19 06:55:14,152 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000019, using chunk size of 283
+2020-04-19 06:55:14,152 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:14,152 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 283
+2020-04-19 06:55:14,181 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000020' which have shape '(300, 23)'
+2020-04-19 06:55:14,181 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000020, using chunk size of 300
+2020-04-19 06:55:14,181 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:14,181 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:14,208 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000021' which have shape '(300, 23)'
+2020-04-19 06:55:14,208 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000021, using chunk size of 300
+2020-04-19 06:55:14,208 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:14,208 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:14,235 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000022' which have shape '(300, 23)'
+2020-04-19 06:55:14,235 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000022, using chunk size of 300
+2020-04-19 06:55:14,235 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:14,235 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:14,262 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000023' which have shape '(300, 23)'
+2020-04-19 06:55:14,262 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000023, using chunk size of 300
+2020-04-19 06:55:14,262 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:14,262 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:14,289 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000024' which have shape '(300, 23)'
+2020-04-19 06:55:14,289 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000024, using chunk size of 300
+2020-04-19 06:55:14,289 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:14,289 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:14,317 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000025' which have shape '(300, 23)'
+2020-04-19 06:55:14,317 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000025, using chunk size of 300
+2020-04-19 06:55:14,317 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:14,317 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:14,344 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000026' which have shape '(300, 23)'
+2020-04-19 06:55:14,344 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000026, using chunk size of 300
+2020-04-19 06:55:14,344 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:14,344 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:14,371 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000027' which have shape '(300, 23)'
+2020-04-19 06:55:14,371 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000027, using chunk size of 300
+2020-04-19 06:55:14,371 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:14,371 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:14,398 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000028' which have shape '(300, 23)'
+2020-04-19 06:55:14,398 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000028, using chunk size of 300
+2020-04-19 06:55:14,398 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:14,398 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:14,425 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000029' which have shape '(292, 23)'
+2020-04-19 06:55:14,426 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000029, using chunk size of 292
+2020-04-19 06:55:14,426 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:14,426 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 292
+2020-04-19 06:55:14,456 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000030' which have shape '(300, 23)'
+2020-04-19 06:55:14,456 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000030, using chunk size of 300
+2020-04-19 06:55:14,456 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:14,456 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:14,484 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000031' which have shape '(300, 23)'
+2020-04-19 06:55:14,484 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000031, using chunk size of 300
+2020-04-19 06:55:14,484 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:14,484 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:14,512 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000032' which have shape '(300, 23)'
+2020-04-19 06:55:14,513 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000032, using chunk size of 300
+2020-04-19 06:55:14,513 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:14,513 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:14,542 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000033' which have shape '(300, 23)'
+2020-04-19 06:55:14,542 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000033, using chunk size of 300
+2020-04-19 06:55:14,542 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:14,542 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:14,570 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000034' which have shape '(300, 23)'
+2020-04-19 06:55:14,570 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000034, using chunk size of 300
+2020-04-19 06:55:14,570 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:14,570 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:14,597 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000035' which have shape '(300, 23)'
+2020-04-19 06:55:14,597 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000035, using chunk size of 300
+2020-04-19 06:55:14,598 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:14,598 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:14,625 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000036' which have shape '(300, 23)'
+2020-04-19 06:55:14,626 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000036, using chunk size of 300
+2020-04-19 06:55:14,626 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:14,626 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:14,652 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000037' which have shape '(290, 23)'
+2020-04-19 06:55:14,652 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000037, using chunk size of 290
+2020-04-19 06:55:14,653 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:14,653 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 290
+2020-04-19 06:55:14,683 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000038' which have shape '(300, 23)'
+2020-04-19 06:55:14,683 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000038, using chunk size of 300
+2020-04-19 06:55:14,683 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:14,683 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:14,710 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000039' which have shape '(298, 23)'
+2020-04-19 06:55:14,711 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000039, using chunk size of 298
+2020-04-19 06:55:14,711 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:14,711 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 298
+2020-04-19 06:55:14,742 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000040' which have shape '(297, 23)'
+2020-04-19 06:55:14,742 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000040, using chunk size of 297
+2020-04-19 06:55:14,742 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:14,742 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 297
+2020-04-19 06:55:14,773 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000041' which have shape '(261, 23)'
+2020-04-19 06:55:14,773 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000041, using chunk size of 261
+2020-04-19 06:55:14,773 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:14,773 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 261
+2020-04-19 06:55:14,799 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000042' which have shape '(276, 23)'
+2020-04-19 06:55:14,799 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000042, using chunk size of 276
+2020-04-19 06:55:14,799 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:14,799 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 276
+2020-04-19 06:55:14,828 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000043' which have shape '(300, 23)'
+2020-04-19 06:55:14,828 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000043, using chunk size of 300
+2020-04-19 06:55:14,828 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:14,828 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:14,857 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000044' which have shape '(277, 23)'
+2020-04-19 06:55:14,857 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000044, using chunk size of 277
+2020-04-19 06:55:14,857 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:14,857 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 277
+2020-04-19 06:55:14,887 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000045' which have shape '(300, 23)'
+2020-04-19 06:55:14,887 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000045, using chunk size of 300
+2020-04-19 06:55:14,887 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:14,887 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:14,916 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000046' which have shape '(292, 23)'
+2020-04-19 06:55:14,916 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000046, using chunk size of 292
+2020-04-19 06:55:14,917 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:14,917 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 292
+2020-04-19 06:55:14,943 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000047' which have shape '(300, 23)'
+2020-04-19 06:55:14,943 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000047, using chunk size of 300
+2020-04-19 06:55:14,943 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:14,943 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:14,972 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000048' which have shape '(300, 23)'
+2020-04-19 06:55:14,972 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000048, using chunk size of 300
+2020-04-19 06:55:14,972 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:14,972 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:14,999 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000049' which have shape '(300, 23)'
+2020-04-19 06:55:15,000 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000049, using chunk size of 300
+2020-04-19 06:55:15,000 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:15,000 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:15,027 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000050' which have shape '(300, 23)'
+2020-04-19 06:55:15,027 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000050, using chunk size of 300
+2020-04-19 06:55:15,027 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:15,027 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:15,054 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000051' which have shape '(297, 23)'
+2020-04-19 06:55:15,054 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000051, using chunk size of 297
+2020-04-19 06:55:15,054 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:15,054 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 297
+2020-04-19 06:55:15,081 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000052' which have shape '(298, 23)'
+2020-04-19 06:55:15,081 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000052, using chunk size of 298
+2020-04-19 06:55:15,081 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:15,081 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 298
+2020-04-19 06:55:15,108 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000053' which have shape '(291, 23)'
+2020-04-19 06:55:15,109 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000053, using chunk size of 291
+2020-04-19 06:55:15,109 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:15,109 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 291
+2020-04-19 06:55:15,138 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000054' which have shape '(297, 23)'
+2020-04-19 06:55:15,138 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000054, using chunk size of 297
+2020-04-19 06:55:15,138 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:15,138 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 297
+2020-04-19 06:55:15,164 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000055' which have shape '(297, 23)'
+2020-04-19 06:55:15,164 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000055, using chunk size of 297
+2020-04-19 06:55:15,164 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:15,164 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 297
+2020-04-19 06:55:15,192 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000056' which have shape '(297, 23)'
+2020-04-19 06:55:15,193 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000056, using chunk size of 297
+2020-04-19 06:55:15,193 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:15,193 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 297
+2020-04-19 06:55:15,219 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000057' which have shape '(262, 23)'
+2020-04-19 06:55:15,219 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000057, using chunk size of 262
+2020-04-19 06:55:15,220 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:15,220 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 262
+2020-04-19 06:55:15,247 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000058' which have shape '(289, 23)'
+2020-04-19 06:55:15,247 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000058, using chunk size of 289
+2020-04-19 06:55:15,247 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:15,247 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 289
+2020-04-19 06:55:15,276 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000059' which have shape '(299, 23)'
+2020-04-19 06:55:15,276 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000059, using chunk size of 299
+2020-04-19 06:55:15,276 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:15,276 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 299
+2020-04-19 06:55:15,304 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000060' which have shape '(300, 23)'
+2020-04-19 06:55:15,304 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000060, using chunk size of 300
+2020-04-19 06:55:15,304 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:15,304 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:15,332 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000061' which have shape '(300, 23)'
+2020-04-19 06:55:15,332 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000061, using chunk size of 300
+2020-04-19 06:55:15,332 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:15,332 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:15,359 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000062' which have shape '(300, 23)'
+2020-04-19 06:55:15,359 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000062, using chunk size of 300
+2020-04-19 06:55:15,359 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:15,359 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:15,386 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000063' which have shape '(300, 23)'
+2020-04-19 06:55:15,386 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000063, using chunk size of 300
+2020-04-19 06:55:15,387 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:15,387 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:15,415 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000064' which have shape '(300, 23)'
+2020-04-19 06:55:15,415 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000064, using chunk size of 300
+2020-04-19 06:55:15,415 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:15,415 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:15,443 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000065' which have shape '(300, 23)'
+2020-04-19 06:55:15,443 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000065, using chunk size of 300
+2020-04-19 06:55:15,443 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:15,443 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:15,470 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000066' which have shape '(300, 23)'
+2020-04-19 06:55:15,470 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000066, using chunk size of 300
+2020-04-19 06:55:15,471 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:15,471 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:15,498 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000067' which have shape '(300, 23)'
+2020-04-19 06:55:15,498 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000067, using chunk size of 300
+2020-04-19 06:55:15,498 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:15,498 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:15,525 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000068' which have shape '(300, 23)'
+2020-04-19 06:55:15,525 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000068, using chunk size of 300
+2020-04-19 06:55:15,525 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:15,526 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:15,552 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000069' which have shape '(300, 23)'
+2020-04-19 06:55:15,553 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000069, using chunk size of 300
+2020-04-19 06:55:15,553 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:15,553 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:15,586 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000070' which have shape '(300, 23)'
+2020-04-19 06:55:15,586 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000070, using chunk size of 300
+2020-04-19 06:55:15,587 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:15,587 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:15,613 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000071' which have shape '(300, 23)'
+2020-04-19 06:55:15,614 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000071, using chunk size of 300
+2020-04-19 06:55:15,614 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:15,614 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:15,642 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000072' which have shape '(300, 23)'
+2020-04-19 06:55:15,642 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000072, using chunk size of 300
+2020-04-19 06:55:15,642 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:15,642 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:15,669 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000073' which have shape '(300, 23)'
+2020-04-19 06:55:15,669 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000073, using chunk size of 300
+2020-04-19 06:55:15,669 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:15,669 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:15,695 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000074' which have shape '(300, 23)'
+2020-04-19 06:55:15,695 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000074, using chunk size of 300
+2020-04-19 06:55:15,696 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:15,696 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:15,722 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000075' which have shape '(300, 23)'
+2020-04-19 06:55:15,722 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000075, using chunk size of 300
+2020-04-19 06:55:15,722 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:15,722 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:15,749 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000076' which have shape '(300, 23)'
+2020-04-19 06:55:15,749 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000076, using chunk size of 300
+2020-04-19 06:55:15,749 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:15,749 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:15,775 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000077' which have shape '(300, 23)'
+2020-04-19 06:55:15,776 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000077, using chunk size of 300
+2020-04-19 06:55:15,776 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:15,776 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:15,803 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000078' which have shape '(300, 23)'
+2020-04-19 06:55:15,803 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000078, using chunk size of 300
+2020-04-19 06:55:15,803 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:15,803 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:15,830 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000079' which have shape '(300, 23)'
+2020-04-19 06:55:15,830 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000079, using chunk size of 300
+2020-04-19 06:55:15,830 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:15,830 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:15,859 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000080' which have shape '(300, 23)'
+2020-04-19 06:55:15,859 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000080, using chunk size of 300
+2020-04-19 06:55:15,859 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:15,859 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:15,886 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000081' which have shape '(300, 23)'
+2020-04-19 06:55:15,886 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000081, using chunk size of 300
+2020-04-19 06:55:15,886 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:15,886 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:15,913 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000082' which have shape '(300, 23)'
+2020-04-19 06:55:15,913 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000082, using chunk size of 300
+2020-04-19 06:55:15,913 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:15,913 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:15,941 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000083' which have shape '(300, 23)'
+2020-04-19 06:55:15,941 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000083, using chunk size of 300
+2020-04-19 06:55:15,941 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:15,941 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+LOG (apply-cmvn-sliding[5.5.669~1-b1d80]:main():apply-cmvn-sliding.cc:75) Applied sliding-window cepstral mean normalization to 90 utterances, 0 had errors.
+2020-04-19 06:55:15,968 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000084' which have shape '(300, 23)'
+2020-04-19 06:55:15,968 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000084, using chunk size of 300
+2020-04-19 06:55:15,968 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:15,968 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:15,995 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000085' which have shape '(300, 23)'
+2020-04-19 06:55:15,995 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000085, using chunk size of 300
+2020-04-19 06:55:15,995 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:15,995 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+LOG (select-voiced-frames[5.5.669~1-b1d80]:main():select-voiced-frames.cc:106) Done selecting voiced frames; processed 90 utterances, 0 had errors.
+2020-04-19 06:55:16,022 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000086' which have shape '(300, 23)'
+2020-04-19 06:55:16,022 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000086, using chunk size of 300
+2020-04-19 06:55:16,022 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:16,022 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:16,048 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000087' which have shape '(300, 23)'
+2020-04-19 06:55:16,048 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000087, using chunk size of 300
+2020-04-19 06:55:16,048 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:16,048 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:16,077 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000088' which have shape '(300, 23)'
+2020-04-19 06:55:16,077 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000088, using chunk size of 300
+2020-04-19 06:55:16,077 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:16,077 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 300
+2020-04-19 06:55:16,104 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:248 - make_embedding - INFO ] Processing features with key 'demo-000089' which have shape '(67, 23)'
+2020-04-19 06:55:16,104 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:265 - make_embedding - INFO ] Chunk size of 400 is greater than the number of rows in utterance: demo-000089, using chunk size of 67
+2020-04-19 06:55:16,104 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:271 - make_embedding - INFO ] num_chunks: 1
+2020-04-19 06:55:16,104 [/home/punchproject666/kaldi/egs/sre16/senior-webapp/backend/kaldi_AAAAA/local/tf/models.py:290 - make_embedding - INFO ] offset: 67
+LOG (copy-vector[5.5.669~1-b1d80]:main():copy-vector.cc:90) Copied 90 vectors.
+2020-04-19 06:55:17,123 [local/tf/extract_embedding.py:160 - eval_dnn - INFO ] text : demo-000000 exp/pvector_net/pvector_prod//xvector.ark:12
+demo-000001 exp/pvector_net/pvector_prod//xvector.ark:2082
+demo-000002 exp/pvector_net/pvector_prod//xvector.ark:4152
+demo-000003 exp/pvector_net/pvector_prod//xvector.ark:6222
+demo-000004 exp/pvector_net/pvector_prod//xvector.ark:8292
+demo-000005 exp/pvector_net/pvector_prod//xvector.ark:10362
+demo-000006 exp/pvector_net/pvector_prod//xvector.ark:12432
+demo-000007 exp/pvector_net/pvector_prod//xvector.ark:14502
+demo-000008 exp/pvector_net/pvector_prod//xvector.ark:16572
+demo-000009 exp/pvector_net/pvector_prod//xvector.ark:18642
+demo-000010 exp/pvector_net/pvector_prod//xvector.ark:20712
+demo-000011 exp/pvector_net/pvector_prod//xvector.ark:22782
+demo-000012 exp/pvector_net/pvector_prod//xvector.ark:24852
+demo-000013 exp/pvector_net/pvector_prod//xvector.ark:26922
+demo-000014 exp/pvector_net/pvector_prod//xvector.ark:28992
+demo-000015 exp/pvector_net/pvector_prod//xvector.ark:31062
+demo-000016 exp/pvector_net/pvector_prod//xvector.ark:33132
+demo-000017 exp/pvector_net/pvector_prod//xvector.ark:35202
+demo-000018 exp/pvector_net/pvector_prod//xvector.ark:37272
+demo-000019 exp/pvector_net/pvector_prod//xvector.ark:39342
+demo-000020 exp/pvector_net/pvector_prod//xvector.ark:41412
+demo-000021 exp/pvector_net/pvector_prod//xvector.ark:43482
+demo-000022 exp/pvector_net/pvector_prod//xvector.ark:45552
+demo-000023 exp/pvector_net/pvector_prod//xvector.ark:47622
+demo-000024 exp/pvector_net/pvector_prod//xvector.ark:49692
+demo-000025 exp/pvector_net/pvector_prod//xvector.ark:51762
+demo-000026 exp/pvector_net/pvector_prod//xvector.ark:53832
+demo-000027 exp/pvector_net/pvector_prod//xvector.ark:55902
+demo-000028 exp/pvector_net/pvector_prod//xvector.ark:57972
+demo-000029 exp/pvector_net/pvector_prod//xvector.ark:60042
+demo-000030 exp/pvector_net/pvector_prod//xvector.ark:62112
+demo-000031 exp/pvector_net/pvector_prod//xvector.ark:64182
+demo-000032 exp/pvector_net/pvector_prod//xvector.ark:66252
+demo-000033 exp/pvector_net/pvector_prod//xvector.ark:68322
+demo-000034 exp/pvector_net/pvector_prod//xvector.ark:70392
+demo-000035 exp/pvector_net/pvector_prod//xvector.ark:72462
+demo-000036 exp/pvector_net/pvector_prod//xvector.ark:74532
+demo-000037 exp/pvector_net/pvector_prod//xvector.ark:76602
+demo-000038 exp/pvector_net/pvector_prod//xvector.ark:78672
+demo-000039 exp/pvector_net/pvector_prod//xvector.ark:80742
+demo-000040 exp/pvector_net/pvector_prod//xvector.ark:82812
+demo-000041 exp/pvector_net/pvector_prod//xvector.ark:84882
+demo-000042 exp/pvector_net/pvector_prod//xvector.ark:86952
+demo-000043 exp/pvector_net/pvector_prod//xvector.ark:89022
+demo-000044 exp/pvector_net/pvector_prod//xvector.ark:91092
+demo-000045 exp/pvector_net/pvector_prod//xvector.ark:93162
+demo-000046 exp/pvector_net/pvector_prod//xvector.ark:95232
+demo-000047 exp/pvector_net/pvector_prod//xvector.ark:97302
+demo-000048 exp/pvector_net/pvector_prod//xvector.ark:99372
+demo-000049 exp/pvector_net/pvector_prod//xvector.ark:101442
+demo-000050 exp/pvector_net/pvector_prod//xvector.ark:103512
+demo-000051 exp/pvector_net/pvector_prod//xvector.ark:105582
+demo-000052 exp/pvector_net/pvector_prod//xvector.ark:107652
+demo-000053 exp/pvector_net/pvector_prod//xvector.ark:109722
+demo-000054 exp/pvector_net/pvector_prod//xvector.ark:111792
+demo-000055 exp/pvector_net/pvector_prod//xvector.ark:113862
+demo-000056 exp/pvector_net/pvector_prod//xvector.ark:115932
+demo-000057 exp/pvector_net/pvector_prod//xvector.ark:118002
+demo-000058 exp/pvector_net/pvector_prod//xvector.ark:120072
+demo-000059 exp/pvector_net/pvector_prod//xvector.ark:122142
+demo-000060 exp/pvector_net/pvector_prod//xvector.ark:124212
+demo-000061 exp/pvector_net/pvector_prod//xvector.ark:126282
+demo-000062 exp/pvector_net/pvector_prod//xvector.ark:128352
+demo-000063 exp/pvector_net/pvector_prod//xvector.ark:130422
+demo-000064 exp/pvector_net/pvector_prod//xvector.ark:132492
+demo-000065 exp/pvector_net/pvector_prod//xvector.ark:134562
+demo-000066 exp/pvector_net/pvector_prod//xvector.ark:136632
+demo-000067 exp/pvector_net/pvector_prod//xvector.ark:138702
+demo-000068 exp/pvector_net/pvector_prod//xvector.ark:140772
+demo-000069 exp/pvector_net/pvector_prod//xvector.ark:142842
+demo-000070 exp/pvector_net/pvector_prod//xvector.ark:144912
+demo-000071 exp/pvector_net/pvector_prod//xvector.ark:146982
+demo-000072 exp/pvector_net/pvector_prod//xvector.ark:149052
+demo-000073 exp/pvector_net/pvector_prod//xvector.ark:151122
+demo-000074 exp/pvector_net/pvector_prod//xvector.ark:153192
+demo-000075 exp/pvector_net/pvector_prod//xvector.ark:155262
+demo-000076 exp/pvector_net/pvector_prod//xvector.ark:157332
+demo-000077 exp/pvector_net/pvector_prod//xvector.ark:159402
+demo-000078 exp/pvector_net/pvector_prod//xvector.ark:161472
+demo-000079 exp/pvector_net/pvector_prod//xvector.ark:163542
+demo-000080 exp/pvector_net/pvector_prod//xvector.ark:165612
+demo-000081 exp/pvector_net/pvector_prod//xvector.ark:167682
+demo-000082 exp/pvector_net/pvector_prod//xvector.ark:169752
+demo-000083 exp/pvector_net/pvector_prod//xvector.ark:171822
+demo-000084 exp/pvector_net/pvector_prod//xvector.ark:173892
+demo-000085 exp/pvector_net/pvector_prod//xvector.ark:175962
+demo-000086 exp/pvector_net/pvector_prod//xvector.ark:178032
+demo-000087 exp/pvector_net/pvector_prod//xvector.ark:180102
+demo-000088 exp/pvector_net/pvector_prod//xvector.ark:182172
+demo-000089 exp/pvector_net/pvector_prod//xvector.ark:184242
+
+(?, 3072)
+model_path exp/pvector_net/models/vector_weights_4.hdf5
+# Accounting: time=7 threads=1
+# Ended (code 0) at Sun Apr 19 06:55:17 UTC 2020, elapsed time 7 seconds
