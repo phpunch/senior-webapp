@@ -50,7 +50,7 @@ def audio_segmentation(folder_name):
     os.mkdir("{}/audios".format(folder_name))
   # Audio Segmentation 
   duration = 3 # (3 second per file)
-  cmd_string = 'ffmpeg -i {0}/demo.wav -f segment -segment_time {1} -ar 16000 -ac 1 {0}/audios/demo4-%06d.wav'.format(folder_name, duration)
+  cmd_string = 'ffmpeg -i {0}/demo.wav -f segment -segment_time {1} -ar 16000 -ac 1 {0}/audios/demo-%06d.wav'.format(folder_name, duration)
   try:
     subprocess.check_call(cmd_string, shell=True)
   except subprocess.CalledProcessError as exc:

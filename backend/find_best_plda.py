@@ -47,6 +47,16 @@ def find_top_scorer(lst):
     lst.sort(key=lambda x: x[1], reverse=True)
     return lst[:3]
 
+def smoothing(ts):
+    smooth_ts = [ts[0], ts[1]]
+    for i in range(2, len(ts) - 2):
+        window = ts[i-2:i+3]
+        smooth_ts.append(sum(window)/len(window))
+    smooth_ts.append(ts[-2])
+    smooth_ts.append(ts[-1])
+    return smooth_ts
+    
+
 def find_best_plda(folder_name):
     score_path = "{}/exp/scores/scores-prod-clean".format(folder_name)
     with open(score_path) as f:
@@ -57,34 +67,98 @@ def find_best_plda(folder_name):
 
     prediction = []
     lst = []
+    speaker_to_frame_scores = defaultdict(list)
+    audio_name_list = []
     for line in lines:   
         
-        speaker, audio_name, score_str = line.split(" ")
-        score = float(score_str)
+        _, audio_name, _ = line.split(" ")
         
         if (audio_name != current_audio_name):
-            scores = find_top_scorer(lst)
-            prediction.append({
-                "filename": current_audio_name,
-                "label": scores[0][0],
-                "scores": scores
-            })
+            audio_name_list.append(current_audio_name)
+            for (speaker, score) in lst:
+                speaker_to_frame_scores[speaker].append(score)
+
             current_audio_name = audio_name
             max_score = -999
             lst = []
-            
+
+        speaker, audio_name, score_str = line.split(" ")
+        score = float(score_str)
         lst.append((speaker, score))
 
-    scores = find_top_scorer(lst)
-    prediction.append({
-            "filename": current_audio_name,
+    audio_name_list.append(audio_name)
+    for (speaker, score) in lst:
+        speaker_to_frame_scores[speaker].append(score)
+
+    # check frame numbers are equal for all speakers
+    num_frames = None
+    for spk in speaker_to_frame_scores.keys():
+        if (num_frames is None):
+            num_frames = len(speaker_to_frame_scores[spk])
+        assert num_frames == len(speaker_to_frame_scores[spk])
+
+    # smoothing 
+    for spk in speaker_to_frame_scores.keys():
+        speaker_to_frame_scores[spk] = smoothing(speaker_to_frame_scores[spk])
+
+    # put prediction back
+    prediction_by_frame = defaultdict(list)
+    for index in range(num_frames):
+        for spk in speaker_to_frame_scores.keys():
+            prediction_by_frame[index].append((spk, speaker_to_frame_scores[spk][index]))
+    
+    # find top score
+    for index in range(num_frames):
+        scores = find_top_scorer(prediction_by_frame[index])
+        print(scores)
+        prediction.append({
+            "filename": audio_name_list[index],
             "label": scores[0][0],
             "scores": scores
-    })
-
+        })
+    print(prediction)
     prediction = sorted(prediction, key=lambda x: x["filename"])
     prediction = add_silence_labels(folder_name, prediction)
     return prediction
+
+# def find_best_plda(folder_name):
+#     score_path = "{}/exp/scores/scores-prod-clean".format(folder_name)
+#     with open(score_path) as f:
+#         lines = [line.strip() for line in f.readlines()]
+
+#     _, current_audio_name, _ = lines[0].split(" ")
+#     max_score = -999
+
+#     prediction = []
+#     lst = []
+#     for line in lines:   
+        
+#         speaker, audio_name, score_str = line.split(" ")
+#         score = float(score_str)
+        
+#         if (audio_name != current_audio_name):
+#             scores = find_top_scorer(lst)
+#             prediction.append({
+#                 "filename": current_audio_name,
+#                 "label": scores[0][0],
+#                 "scores": scores
+#             })
+#             current_audio_name = audio_name
+#             max_score = -999
+#             lst = []
+            
+#         lst.append((speaker, score))
+
+#     scores = find_top_scorer(lst)
+#     prediction.append({
+#             "filename": current_audio_name,
+#             "label": scores[0][0],
+#             "scores": scores
+#     })
+
+#     prediction = sorted(prediction, key=lambda x: x["filename"])
+#     prediction = add_silence_labels(folder_name, prediction)
+#     return prediction
 
 def post_process(prediction):
     temp_prediction = prediction
