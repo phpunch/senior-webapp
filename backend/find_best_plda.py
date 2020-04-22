@@ -37,26 +37,22 @@ def softmax(numbers):
     return result
 
 def find_top_scorer(lst):
-    # print(len(lst))
-    values = np.array([e[1] for e in lst])
-    # print(values)
-    # print(softmax(values))
-    prob_values = softmax(values)
+    # values = np.array([e[1] for e in lst])
+    # prob_values = softmax(values)
+    # prob_lst = []
+    # for i in range(len(lst)):
+    #     prob_lst.append((lst[i][0], prob_values[i]))
+    # prob_lst.sort(key=lambda x: x[1], reverse=True)
 
-    prob_lst = []
-    for i in range(len(lst)):
-        prob_lst.append((lst[i][0], prob_values[i]))
-    prob_lst.sort(key=lambda x: x[1], reverse=True)
-    # print(prob_lst)
-    # raise Exception
-    return prob_lst[:3]
+    lst.sort(key=lambda x: x[1], reverse=True)
+    return lst[:3]
 
 def find_best_plda(folder_name):
     score_path = "{}/exp/scores/scores-prod-clean".format(folder_name)
     with open(score_path) as f:
         lines = [line.strip() for line in f.readlines()]
 
-    current_audio_name = "demo-000000"
+    _, current_audio_name, _ = lines[0].split(" ")
     max_score = -999
 
     prediction = []

@@ -50,7 +50,7 @@ def audio_segmentation(folder_name):
     os.mkdir("{}/audios".format(folder_name))
   # Audio Segmentation 
   duration = 3 # (3 second per file)
-  cmd_string = 'ffmpeg -i {0}/demo.wav -f segment -segment_time {1} -ar 16000 -ac 1 {0}/audios/demo-%06d.wav'.format(folder_name, duration)
+  cmd_string = 'ffmpeg -i {0}/demo.wav -f segment -segment_time {1} -ar 16000 -ac 1 {0}/audios/demo4-%06d.wav'.format(folder_name, duration)
   try:
     subprocess.check_call(cmd_string, shell=True)
   except subprocess.CalledProcessError as exc:
@@ -114,7 +114,7 @@ def test(folder_name):
 
 def compute_result(folder_name, video_id):
   prediction = find_best_plda(folder_name)
-  prediction = post_process(prediction)
+  # prediction = post_process(prediction)
   save_prediction(prediction, folder_name, video_id)
 
 def get_result(folder_name):
@@ -125,19 +125,25 @@ def get_result(folder_name):
     
 if __name__ == "__main__":
   # Create temp folder
-  random_string = "AAAAA"
+  random_string = "adapt_4"
   folder_name = "kaldi_{}".format(random_string)
   shutil.copytree("kaldi", folder_name)
 
   clear_dir(folder_name)
   check_exists(folder_name)
-  download_youtube(folder_name, "https://www.youtube.com/watch?v=kHk5muJUwuw")
+  # download_youtube(folder_name, "https://www.youtube.com/watch?v=kHk5muJUwuw")
   # download_youtube(folder_name, "https://www.youtube.com/watch?v=TmZDlDTK03w")
+  # download_youtube(folder_name, "https://www.youtube.com/watch?v=2_UQRXojFWw")
+  # download_youtube(folder_name, "https://www.youtube.com/watch?v=WItn14CMDSM") # 1
+  # download_youtube(folder_name, "https://www.youtube.com/watch?v=3d0uirQAzvc&feature=youtu.be") # 2 26
+  # download_youtube(folder_name, "https://www.youtube.com/watch?v=JEIOIM80mk8&feature=youtu.be") # 3 24
+  download_youtube(folder_name, "https://www.youtube.com/watch?v=yMvHWLLvfvc&feature=youtu.be") # 4 25.1
   audio_segmentation(folder_name)
   write_wav_file(folder_name)
-  # tune_loudness(folder_name)
+  tune_loudness(folder_name)
+  raise Exception
   test(folder_name)
-  compute_result(folder_name, kHk5muJUwuw)
+  compute_result(folder_name, 'test')
   get_result(folder_name)
 
   

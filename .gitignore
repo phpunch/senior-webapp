@@ -28,3 +28,8 @@ backend/__pycache__
 backend/kaldi/__pycache__
 # backend/kaldi/exp/pvector_net
 backend/database
+
+backend/predict_logs
+backend/label_logs
+backend/kaldi_*
+
