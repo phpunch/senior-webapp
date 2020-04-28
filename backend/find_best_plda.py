@@ -48,11 +48,11 @@ def find_top_scorer(lst):
     return lst[:3]
 
 def smoothing(ts):
-    smooth_ts = [ts[0], ts[1]]
-    for i in range(2, len(ts) - 2):
-        window = ts[i-2:i+3]
+    smooth_ts = [ts[0]]
+    for i in range(1, len(ts) - 1):
+        window = ts[i-1:i+2]
         smooth_ts.append(sum(window)/len(window))
-    smooth_ts.append(ts[-2])
+    # smooth_ts.append(ts[-2])
     smooth_ts.append(ts[-1])
     return smooth_ts
     

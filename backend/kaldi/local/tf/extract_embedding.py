@@ -11,10 +11,11 @@ import traceback
 
 # import mkl
 # import numexpr
-import time
+
 import kaldi_io
 #import ze_utils as utils
-from models import MyModel
+from train import MyModel
+# from models import MyModel
 import warnings
 warnings.filterwarnings("ignore")
 warnings.simplefilter(action='ignore', category=FutureWarning)
@@ -92,6 +93,10 @@ def process_args(args):
     """
 
     args.model_dir = args.model_dir.strip()
+    print()
+    print(os.path.join(args.model_dir, args.model_file))
+    print(os.getcwd())
+    print()
     if args.model_dir == '' or not os.path.exists(os.path.join(args.model_dir, args.model_file)):
         raise Exception("This scripts expects the input model was exist in '{0}' directory.".format(args.model_dir))
 
@@ -105,7 +110,7 @@ def process_wspecifier(wspecifier):
         out_wspecifier += parts[i] + ' '
     if parts[-1].startswith('ark,scp:'):
         ark, scp = parts[-1][8:].split(',')
-        out_wspecifier += 'ark,scp:%s.tmp.ark,%s.tmp.scp' % (ark, scp) # convert ark -> tmp.ark
+        out_wspecifier += 'ark,scp:%s.tmp.ark,%s.tmp.scp' % (ark, scp)
         return out_wspecifier, ark, scp
     if parts[-1].startswith('scp,ark:'):
         scp, ark = parts[-1][8:].split(',')
@@ -134,7 +139,8 @@ def eval_dnn(args):
         logger.info('Both output ark and scp files exist. Return from this call.')
         return
     model = MyModel()
-    # model = ModelTF()
+    model.create_vector_model()
+    # model = MyModel()
     # print("!!!!!!!!!!!!!!! arg.feature_rspecifier !!!!!!!!!!!!!!!!")
     # print(args.feature_rspecifier)
     # print("!!!!!!!!!!!!!!! wspecifier !!!!!!!!!!!!!!!!")
@@ -144,7 +150,7 @@ def eval_dnn(args):
             model_path = os.path.join(model_dir, args.model_file)
             print("model_path", model_path)
             model.make_embedding(input_fid, output_fid, model_path, min_chunk_size, chunk_size, use_gpu, logger)
-    time.sleep(1)
+
     # rename output files
     if ark is not None:
         os.rename(ark + '.tmp.ark', ark)
@@ -152,12 +158,12 @@ def eval_dnn(args):
     if scp is not None:
         with open(scp + '.tmp.scp', 'rt') as fid_in:
             with open(scp + '.tmp', 'w') as fid_out:
-                fid_in.seek(0)
                 text = fid_in.read()
                 text = text.replace('ark.tmp.ark', 'ark')
-                # Ssh: vim: command not foundometimes there is no \n at the end of file ank cause a Kaldi error.
+
+                logger.info(text)
+                # Sometimes there is no \n at the end of file ank cause a Kaldi error.
                 # For preventing this error juts check the last char and append \n if not exist
-                logger.info("text : {}".format(text))
                 if text[-1] != '\n':
                     text += '\n'
                 
