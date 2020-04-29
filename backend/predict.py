@@ -125,23 +125,23 @@ def get_result(folder_name):
     
 if __name__ == "__main__":
   # Create temp folder
-  random_string = "adapt_4"
+  random_string = "test"
   folder_name = "kaldi_{}".format(random_string)
   shutil.copytree("kaldi", folder_name)
 
   clear_dir(folder_name)
   check_exists(folder_name)
-  # download_youtube(folder_name, "https://www.youtube.com/watch?v=kHk5muJUwuw")
+  download_youtube(folder_name, "https://www.youtube.com/watch?v=kHk5muJUwuw")
   # download_youtube(folder_name, "https://www.youtube.com/watch?v=TmZDlDTK03w")
   # download_youtube(folder_name, "https://www.youtube.com/watch?v=2_UQRXojFWw")
   # download_youtube(folder_name, "https://www.youtube.com/watch?v=WItn14CMDSM") # 1
   # download_youtube(folder_name, "https://www.youtube.com/watch?v=3d0uirQAzvc&feature=youtu.be") # 2 26
   # download_youtube(folder_name, "https://www.youtube.com/watch?v=JEIOIM80mk8&feature=youtu.be") # 3 24
-  download_youtube(folder_name, "https://www.youtube.com/watch?v=yMvHWLLvfvc&feature=youtu.be") # 4 25.1
+  # download_youtube(folder_name, "https://www.youtube.com/watch?v=yMvHWLLvfvc&feature=youtu.be") # 4 25.1
   audio_segmentation(folder_name)
   write_wav_file(folder_name)
   tune_loudness(folder_name)
-  raise Exception
+  # raise Exception
   test(folder_name)
   compute_result(folder_name, 'test')
   get_result(folder_name)
