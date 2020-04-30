@@ -29,7 +29,7 @@ class DemoYoutube extends PureComponent {
   state = {
     currentTime: 0,
     youtube_url:
-      "https://www.youtube.com/watch?v=kHk5muJUwuw&feature=emb_title",
+      "https://www.youtube.com/watch?v=npzbKV-mB28",
     prediction: null,
     politician_idx2spk: [],
     politician_spk2idx: {},
