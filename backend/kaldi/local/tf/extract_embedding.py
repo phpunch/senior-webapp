@@ -9,22 +9,14 @@ import os
 import sys
 import traceback
 
-# import mkl
-# import numexpr
-
+import time
 import kaldi_io
-#import ze_utils as utils
 from train import MyModel
-# from models import MyModel
+
 import warnings
 warnings.filterwarnings("ignore")
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
-# mkl.set_num_threads(1)
-# numexpr.set_num_threads(1)
-
-# MKL_NUM_THREADS = 1
-# OMP_NUM_THREADS = 1
 
 logger = logging.getLogger('extract_embedding')
 logger.setLevel(logging.INFO)
@@ -150,7 +142,7 @@ def eval_dnn(args):
             model_path = os.path.join(model_dir, args.model_file)
             print("model_path", model_path)
             model.make_embedding(input_fid, output_fid, model_path, min_chunk_size, chunk_size, use_gpu, logger)
-
+    time.sleep(1)
     # rename output files
     if ark is not None:
         os.rename(ark + '.tmp.ark', ark)
